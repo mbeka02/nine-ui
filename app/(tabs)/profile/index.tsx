@@ -1,16 +1,15 @@
-import { StyleSheet } from "react-native";
-import { PendingCard } from "@/components/Screens/PendingCard";
-
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { Text, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-export default function PendingScreen() {
+export default function ProfileScreen() {
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Pending</ThemedText>
+        <ThemedText type="title">Your Profile</ThemedText>
       </ThemedView>
-      <PendingCard />
+
+      <Text>profile</Text>
     </ParallaxScrollView>
   );
 }
@@ -18,9 +17,8 @@ export default function PendingScreen() {
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: "row",
-    gap: 4,
-
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
   },
 });

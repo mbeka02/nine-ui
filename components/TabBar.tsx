@@ -4,11 +4,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import TabBarButton from "./TabBarButton";
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
-  const icon = {
-    index: (props: any) => <Feather name="home" size={24} {...props} />,
-    pending: (props: any) => <Feather name="clock" size={24} {...props} />,
-  };
-
   return (
     <View style={styles.tabbar}>
       {state.routes.map((route, index) => {
@@ -88,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "black", //"#151718",
-    marginHorizontal: 80,
+    marginHorizontal: 60,
     paddingVertical: 15,
     borderRadius: 35,
     shadowColor: "#000",
