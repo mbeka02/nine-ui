@@ -31,6 +31,12 @@ export default function TabLayout() {
           title: "Pending",
         }}
       />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+        }}
+      />
     </Tabs>
   );
 }

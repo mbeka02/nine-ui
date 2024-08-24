@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import { StyleSheet, Pressable } from "react-native";
 import React, { useEffect } from "react";
 import { icon } from "@/constants/Icons";
 import Animated, {
