@@ -12,11 +12,12 @@ import {
 import { icons } from "../../constants";
 interface InputProps {
   title: string;
-  value: string;
+  value: string | null;
   placeholder: string;
   handleChangeText: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
   className: string;
   props?: TextInputProps;
+  //onChangeText: (text: string) => void;
 }
 
 const FormInput = ({
@@ -26,9 +27,10 @@ const FormInput = ({
   handleChangeText,
   className,
   props,
+  // onChangeText,
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const inputText = value ?? "";
   return (
     <View className={`space-y-1 ${className}`}>
       <Text className="text-sm text-white font-bold mt-2  ">{title}</Text>
@@ -36,9 +38,10 @@ const FormInput = ({
       <View className="w-full h-16 px-4 text-black  border border-gray-100 rounded-2xl  focus:border-custom flex flex-row items-center">
         <TextInput
           className="flex-1 text-black placeholder:text-gray-100/80 placeholder:font-medium placeholder:text-sm font-semibold text-base"
-          value={value}
+          value={inputText}
           placeholder={placeholder}
           onChange={handleChangeText}
+          //    onChangeText={onChangeText}
           secureTextEntry={title === "Password" && !showPassword}
           {...props}
         />
