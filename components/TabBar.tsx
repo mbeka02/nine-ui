@@ -2,8 +2,10 @@ import { Feather } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import TabBarButton from "./TabBarButton";
-
+import { useAuth } from "@clerk/clerk-expo";
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  const { signOut } = useAuth();
+
   return (
     <View style={styles.tabbar}>
       {state.routes.map((route, index) => {
@@ -71,6 +73,15 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           />
         );
       })}
+      <TabBarButton
+        key={"logout"}
+        onPress={signOut}
+        onLongPress={signOut}
+        isFocused={false}
+        routeName="logout"
+        color="white"
+        label="Log-out"
+      />
     </View>
   );
 }
@@ -83,7 +94,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "black", //"#151718",
-    marginHorizontal: 50,
+    marginHorizontal: 40,
     paddingVertical: 15,
     borderRadius: 35,
     shadowColor: "#000",
