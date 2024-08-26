@@ -1,15 +1,17 @@
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { StyleSheet, Image, View } from "react-native";
+import { StyleSheet, Image, View, Pressable } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useUser, useAuth } from "@clerk/clerk-expo";
+import { useUser } from "@clerk/clerk-expo";
+import { Feather } from "@expo/vector-icons";
+
 import { FormButton } from "@/components/form/FormButton";
 import { useState } from "react";
 import { FormInput } from "@/components/form/FormInput";
 import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
 import { Alert } from "react-native";
+import * as expoImagePicker from "expo-image-picker";
 export default function ProfileScreen() {
-  const { signOut } = useAuth();
   const { user, isSignedIn, isLoaded } = useUser();
   const [form, setForm] = useState({
     firstName: user?.firstName || "",
@@ -21,17 +23,14 @@ export default function ProfileScreen() {
     return null;
   }
 
-  const logOut = () => {
-    signOut();
-  };
-
   const onSubmit = async () => {
     try {
-      user.update({
+      await user.update({
         firstName: form.firstName,
         lastName: form.lastName,
         username: form.username,
       });
+      await user.reload();
       Alert.alert("Success", "Profile updated successfully");
     } catch (error: any) {
       console.log(error.errors[0]);
@@ -41,19 +40,50 @@ export default function ProfileScreen() {
   /*const handleInputChange = (field: string) => (text: string) => {
     setForm((prevForm) => ({ ...prevForm, [field]: text }));
   };*/
+  const onPickImage = async () => {
+    try {
+      let result = await expoImagePicker.launchImageLibraryAsync({
+        mediaTypes: expoImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+        base64: true,
+      });
+      console.log(result);
+
+      if (!result.canceled && result.assets[0].base64) {
+        const base64 = result.assets[0].base64;
+        const mimeType = result.assets[0].mimeType;
+        const image = `data:${mimeType};base64,${base64}`;
+        await user.setProfileImage({ file: image });
+        await user.reload();
+      }
+    } catch (error: any) {
+      console.log(error.errors[0]);
+      Alert.alert("Error", "Failed to update profile picture");
+    }
+  };
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Edit Profile</ThemedText>
       </ThemedView>
-      <Image
-        source={
-          user?.imageUrl
-            ? { uri: user?.imageUrl }
-            : require("@/assets/images/default-profile-pic.png")
-        }
-        className="w-20 h-20 mx-auto rounded-full border-solid border-2 border-custom"
-      />
+      <View className="relative w-24 h-24 mx-auto">
+        <Image
+          source={
+            user?.imageUrl
+              ? { uri: user?.imageUrl }
+              : require("@/assets/images/default-profile-pic.png")
+          }
+          className="w-full h-full rounded-full border-solid border-2 border-custom"
+        />
+        <Pressable
+          className="h-8 w-8 flex bg-white rounded-full  justify-center items-center absolute bottom-0 -right-2 "
+          onPress={onPickImage}
+        >
+          <Feather name="edit" size={20} />
+        </Pressable>
+      </View>
       <FormInput
         placeholder="Harry"
         title="firstname"
@@ -64,7 +94,7 @@ export default function ProfileScreen() {
         }
       />
       <FormInput
-        placeholder="Dubois"
+        placeholder="Du Bois"
         title="lastname"
         value={form.lastName}
         className="mt-8"
@@ -81,19 +111,7 @@ export default function ProfileScreen() {
           setForm({ ...form, username: e.nativeEvent.text })
         }
       />
-      <View className="w-full mt-2 flex flex-row items-center">
-        <FormButton
-          title="update"
-          handlePress={onSubmit}
-          containerStyles="w-24 mr-4"
-        />
-
-        <FormButton
-          title="logout"
-          handlePress={logOut}
-          containerStyles="w-24"
-        />
-      </View>
+      <FormButton title="update" handlePress={onSubmit} />
     </ParallaxScrollView>
   );
 }
