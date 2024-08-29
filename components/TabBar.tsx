@@ -1,13 +1,51 @@
 import { Feather } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  LayoutChangeEvent,
+} from "react-native";
 import TabBarButton from "./TabBarButton";
 import { useAuth } from "@clerk/clerk-expo";
+import { useState } from "react";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { signOut } = useAuth();
-
+  const [dimensions, setDimensions] = useState({ height: 20, width: 100 });
+  const buttonWidth = dimensions.width / 4;
+  const onTabbarLayout = (e: LayoutChangeEvent) => {
+    setDimensions({
+      height: e.nativeEvent.layout.height,
+      width: e.nativeEvent.layout.width,
+    });
+  };
+  const tabPosition = useSharedValue(0);
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: tabPosition.value }],
+    };
+  });
   return (
-    <View style={styles.tabbar}>
+    <View onLayout={onTabbarLayout} style={styles.tabbar}>
+      <Animated.View
+        style={[
+          animatedStyle,
+          {
+            position: "absolute",
+            backgroundColor: "#723FEB",
+            borderRadius: 999,
+            //marginHorizontal: 12,
+            height: dimensions.height - 10,
+            width: buttonWidth,
+          },
+        ]}
+      />
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -20,6 +58,9 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         const isFocused = state.index === index;
 
         const onPress = () => {
+          tabPosition.value = withSpring(buttonWidth * index, {
+            duration: 1500,
+          });
           const event = navigation.emit({
             type: "tabPress",
             target: route.key,
@@ -68,20 +109,22 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             onLongPress={onLongPress}
             isFocused={isFocused}
             routeName={route.name}
-            color={isFocused ? "#673ab7" : "white"}
+            color={isFocused ? "white" : "#f8fafc"}
             label={label}
           />
         );
       })}
-      <TabBarButton
-        key={"logout"}
-        onPress={signOut}
-        onLongPress={signOut}
-        isFocused={false}
-        routeName="logout"
-        color="white"
-        label="Log-out"
-      />
+      {
+        <TabBarButton
+          key={"logout"}
+          onPress={signOut}
+          onLongPress={signOut}
+          isFocused={false}
+          routeName="logout"
+          color="white"
+          label="Log-out"
+        />
+      }
     </View>
   );
 }
