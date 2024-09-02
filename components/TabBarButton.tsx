@@ -51,7 +51,7 @@ const TabBarButton = ({
         {
           //@ts-ignore
           icon[routeName]({
-            color: isFocused ? "white" : "#f8fafc",
+            color: isFocused ? "black" : "white",
           })
         }
       </Animated.View>
