@@ -72,12 +72,12 @@ const Login = () => {
 
       <Link href="/reset" asChild>
         <Pressable style={styles.button}>
-          <Text className="text-gray-100">Forgot password?</Text>
+          <Text className="text-white underline">Forgot password?</Text>
         </Pressable>
       </Link>
       <Link href="/register" asChild>
         <Pressable style={styles.button}>
-          <Text className=" text-gray-100">Create Account</Text>
+          <Text className=" text-white underline">Create Account</Text>
         </Pressable>
       </Link>
     </View>
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 8,
+    marginTop: 20,
     alignItems: "center",
   },
 });

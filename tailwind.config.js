@@ -19,6 +19,7 @@ module.exports = {
           100: "#cdcde0",
         },
         custom: "#723FEB",
+        customGreen: "#9EDA6F",
       },
     },
   },

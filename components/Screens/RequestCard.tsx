@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     // opacity: 0.5
   },
   amount: {
-    color: "#723FEB",
+    color: "#9EDA6F",
     fontWeight: "600",
   },
 });
