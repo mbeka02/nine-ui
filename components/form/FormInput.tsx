@@ -33,7 +33,7 @@ const FormInput = ({
   const inputText = value ?? "";
   return (
     <View className={`space-y-1  ${className}`}>
-      <Text className="text-sm text-white font-bold mt-6   ">{title}</Text>
+      <Text className="text-base text-white font-medium mt-6   ">{title}</Text>
 
       <View className="w-full  h-12 px-4 text-black  border border-gray-100 rounded-2xl  focus:border-customGreen flex flex-row items-center">
         <TextInput

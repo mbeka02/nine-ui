@@ -64,7 +64,7 @@ const Login = () => {
         }
       />
       <FormButton
-        title="Login"
+        title="Log in"
         handlePress={onSignInPress}
         isLoading={loading}
         containerStyles="mt-7"
@@ -72,7 +72,7 @@ const Login = () => {
 
       <Link href="/reset" asChild>
         <Pressable style={styles.button}>
-          <Text className="text-white underline">Forgot password?</Text>
+          <Text className="text-customGreen underline">Forgot password?</Text>
         </Pressable>
       </Link>
       <Link href="/register" asChild>

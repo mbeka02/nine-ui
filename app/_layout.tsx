@@ -37,8 +37,8 @@ const InitialLayout = () => {
 
     if (isSignedIn && !inTabsGroup) {
       router.replace("/");
-    } else if (!isSignedIn) {
-      router.replace("/login");
+    } else if (!isSignedIn && segments[0] !== "home") {
+      router.replace("/home");
     }
   }, [isSignedIn]);
 
@@ -46,6 +46,7 @@ const InitialLayout = () => {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="home" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
   );
