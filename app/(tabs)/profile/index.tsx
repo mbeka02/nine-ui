@@ -11,6 +11,7 @@ import { FormInput } from "@/components/form/FormInput";
 import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
 import { Alert } from "react-native";
 import * as expoImagePicker from "expo-image-picker";
+import "../../../global"
 export default function ProfileScreen() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [form, setForm] = useState({

@@ -2,7 +2,17 @@ import { View, StyleSheet, Button, Pressable, Text } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import petra from "@/components/wallet/petra";
+import "../../global"
+
 export default function Pay() {
+    function handlePay() {
+        
+        const payee_address = "0x1dc1d5999fc92580f0324e270318ce6465a428d30e2d488b0471fd764aad39cc"
+        const amount = 1000000
+        const request_id = "This is the request id"
+    petra.signAndSumbitTransaction({ payee_address: payee_address, amount: amount, request_id: request_id })
+    }
     return (
         <ParallaxScrollView>
             <ThemedView style={styles.titleContainer}>
@@ -17,7 +27,7 @@ export default function Pay() {
                 <Pressable style={styles.button} onPress={() => { }}>
                     <Text style={styles.text}>Cancel</Text>
                 </Pressable>
-                <Pressable style={styles.button} onPress={() => { }}>
+                <Pressable style={styles.button} onPress={() => handlePay()}>
                     <Text style={styles.text}> Pay</Text>
                 </Pressable>
 

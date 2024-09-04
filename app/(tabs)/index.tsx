@@ -5,7 +5,42 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { RequestCard } from '@/components/Screens/RequestCard';
 import petra from '@/components/wallet/petra';
+import { Link, useGlobalSearchParams, usePathname, useRouter } from 'expo-router'
+import { useEffect } from 'react';
+import { Effect, Either } from 'effect';
 export default function HomeScreen() {
+    const globalParams = useGlobalSearchParams<{
+        data: string,
+        response: 'approved' | 'rejected' | 'dismissed'
+    }>()
+    console.log("Global Params::", globalParams)
+    useEffect(() => {
+        const subscription = async () => {
+            if (globalParams.data && globalParams.response) {
+                if (globalParams.response === 'dismissed') {
+                    console.log("You have dismissed the connection request");
+                    return
+                }
+                const task = petra.generateSharedSecret({
+                    data: globalParams.data,
+                    response: globalParams.response
+                }).pipe(Effect.runSync)
+
+                await Either.match(task, {
+                    onLeft(left) {
+                        console.log("Some error occured");
+                    },
+                    async onRight(right) {
+                        console.log("right. Everything's good", right)
+
+                    },
+                })
+            }
+        }
+
+        subscription()
+
+    }, [globalParams.data, globalParams.response])
     return (
         <ParallaxScrollView
         >

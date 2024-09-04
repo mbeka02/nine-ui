@@ -7,11 +7,11 @@ import { Buffer } from 'buffer'
 import { Effect } from 'effect'
 import { NoPrivateKey, NoPrivateKeyError, PetraConnectionRejected, UnableToDeserializePetraResponse, UnableToGeneratePetraSharedSecret, UnableToStorePetraSharedSecret } from './errors'
 import * as SecureStore from 'expo-secure-store'
-
+import { MODULE_ENTRY_FUNCTIONS } from './module'
 interface TransactionPayload {
-    type: 'entry_function_payload',
-    transactionFunction: string,
-    functionArguments: Array<string | number | boolean>
+    amount: number,
+    request_id: string,
+    payee_address: string
 }
 
 interface signAndSubmitData {
@@ -54,7 +54,7 @@ class PetraWallet {
             return null
         }
         try {
-            console.log("data", typeof data)
+            console.log("data type", typeof data)
             const parsed = JSON.parse(data) as {
                 secret: string
                 address: string
@@ -262,7 +262,7 @@ class PetraWallet {
             appInfo: {
                 domain: __DEV__ ?
                     "host.exp.exponent" :
-                    "com.kadenet.poseidon" 
+                    "com.nine.nine_app"
             },
             redirectLink: `${Linking.createURL(current_location ?? "/")}`,
             dappEncryptionPublicKey: Buffer.from(this.latestKeyPair.publicKey).toString('hex')
@@ -288,31 +288,42 @@ class PetraWallet {
             throw new Error("Failed to generate key pair")
         }
 
-        const { type, transactionFunction, functionArguments } = payload
+        const { amount, payee_address, request_id } = payload
+        console.log(amount, payee_address, request_id);
         const data = {
-            type,
-            function: transactionFunction,
-            arguments: functionArguments,
-            type_arguments: []
+            arguments: [
+                amount, payee_address, request_id
+            ],
+            function: MODULE_ENTRY_FUNCTIONS.make_payment,
+
         }
+        // const data = {
+        //     arguments: [
+        //         '0x0000000000000000000000000000000000000000000000000000000000000001',
+        //         10000000, // 0.1 APT
+        //       ],
+        //       function: '0x1::coin::transfer',
+        //       type: 'entry_function_payload',
+        //       type_arguments: ['0x1::aptos_coin::AptosCoin']
+        // }
 
-        console.log("data", data)
-
+        console.log("data here incoming", data)
+        console.log("Stringified", JSON.stringify(data));
         const hexString = Buffer.from(this.latestKeyPair?.publicKey).toString('hex')
 
         console.log("Public key hexString", hexString)
 
         const encrypted = this.encryptMessage(JSON.stringify(data))
-
+        console.log("Didn't reach here", encrypted);
         const payloadData: signAndSubmitData = {
             appInfo: {
                 domain: __DEV__ ?
                     "host.exp.exponent" :
-                    "com.kadenet.poseidon"
+                    "com.nine.nine_app"
             },
             payload: encrypted.encrypted,
             dappEncryptionPublicKey: hexString,
-            redirectLink: `${Linking.createURL(location ?? "/settings/connect")}`,
+            redirectLink: `${Linking.createURL(location ?? "/")}`,
             nonce: encrypted.nonce
         }
 
@@ -327,7 +338,7 @@ class PetraWallet {
     parseResponseToData<T = any>(response: string) {
         const decoded = Buffer.from(response, 'base64').toString()
         try {
-
+            console.log("The returned stuff", JSON.parse(decoded));
             return JSON.parse(decoded) as T
         }
         catch (e) {
