@@ -51,12 +51,15 @@ const TabBarButton = ({
         {
           //@ts-ignore
           icon[routeName]({
-            color: isFocused ? "#673ab7" : "white",
+            color: isFocused ? "black" : "white",
           })
         }
       </Animated.View>
       <Animated.Text
-        style={[{ color: color, fontSize: 12 }, animatedTextStyle]}
+        style={[
+          { color: color, fontSize: 12, fontWeight: "600" },
+          animatedTextStyle,
+        ]}
       >
         {label}
       </Animated.Text>

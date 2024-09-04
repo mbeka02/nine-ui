@@ -18,7 +18,7 @@ export function PendingCard() {
         </View>
         <View style={styles.bottom}>
           <ThemedText style={{ color: "white" }}>Jumia...</ThemedText>
-          <ThemedText style={{ color: "#673ab7" }}>0.458 APT</ThemedText>
+          <ThemedText style={{ color: "#9EDA6F" }}>0.458 APT</ThemedText>
         </View>
       </View>
     </TouchableOpacity>
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     // opacity: 0.5
   },
   amount: {
-    color: "#673ab7",
+    color: "#9EDA6F",
+    fontWeight: "600",
   },
 });
