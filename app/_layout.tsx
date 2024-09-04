@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { ClerkProvider, ClerkLoaded, useAuth } from "@clerk/clerk-expo";
-
+import { useBiometrics } from "@/hooks/useBiometrics";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -23,30 +23,42 @@ if (!publishableKey) {
     "Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env",
   );
 }
+
 const InitialLayout = () => {
   const { isLoaded, isSignedIn } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const { isBiometricSetup } = useBiometrics();
 
   useEffect(() => {
-    if (!isLoaded) return;
+    const checkNavigation = async () => {
+      if (!isLoaded) return;
 
-    const inTabsGroup = segments[0] === "(tabs)";
+      const inTabsGroup = segments[0] === "(tabs)";
+      const biometricSetupDone = await isBiometricSetup();
 
-    console.log("User changed: ", isSignedIn);
+      console.log('Biometric Setup Done:', biometricSetupDone); // Debugging line
+      
+      if (isSignedIn) {
+        if (!biometricSetupDone) {
+          router.replace("/biometric-setup");
+        } else if (!inTabsGroup) {
+          router.replace("/");
+        }
+      } else if (segments[0] !== "home") {
+        router.replace("/home");
+      }
+    };
 
-    if (isSignedIn && !inTabsGroup) {
-      router.replace("/");
-    } else if (!isSignedIn && segments[0] !== "home") {
-      router.replace("/home");
-    }
-  }, [isSignedIn]);
+    checkNavigation();
+  }, [isLoaded, isSignedIn]);
 
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="home" options={{ headerShown: false }} />
+      <Stack.Screen name="biometric-setup" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

@@ -19,11 +19,15 @@ import Animated, {
 } from "react-native-reanimated";
 import { Modal } from "./Modal";
 import { FormButton } from "./form/FormButton";
+import * as SecureStore from "expo-secure-store";
+
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { signOut } = useAuth();
   const [dimensions, setDimensions] = useState({ height: 20, width: 100 });
   const [isOpen, setIsOpen] = useState(false);
-  const doLogout = () => {
+
+  const doLogout = async () => {
+    await SecureStore.deleteItemAsync("biometricSetupDone");//add log to see if it is deleted
     signOut();
   };
   const buttonWidth = dimensions.width / 4;

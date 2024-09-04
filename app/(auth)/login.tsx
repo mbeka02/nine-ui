@@ -6,14 +6,29 @@ import { View, StyleSheet, Button, Pressable, Text, Alert } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
 import { TextInputChangeEventData, NativeSyntheticEvent } from "react-native";
 import { FormButton } from "@/components/form/FormButton";
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import * as LocalAuthentication from "expo-local-authentication";
+
 const Login = () => {
   const { signIn, setActive, isLoaded } = useSignIn();
-
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     emailAddress: "",
     password: "",
   });
+
+  const checkBiometricSetup = async () => {
+    const isBiometricEnrolled = await LocalAuthentication.isEnrolledAsync();
+    const biometricSetupDone = await SecureStore.getItemAsync("biometricSetupDone");
+  
+    if (!isBiometricEnrolled && !biometricSetupDone) {
+      router.replace("/biometric-setup");
+    } else if (biometricSetupDone) {
+      router.replace("/");
+    }
+  };
 
   const onSignInPress = async () => {
     if (!isLoaded) {
@@ -32,8 +47,11 @@ const Login = () => {
 
       // This indicates the user is signed in
       await setActive({ session: completeSignIn.createdSessionId });
+
+      // Check if biometric setup is done
+      await checkBiometricSetup();
     } catch (err: any) {
-      alert(err.errors[0].message);
+      alert(err.errors[0].message || "Sign in failed");
     } finally {
       setLoading(false);
     }
