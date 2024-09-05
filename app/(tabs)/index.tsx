@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Alert, StyleSheet, Image } from "react-native";
+import { View, Text, TextInput, Alert, StyleSheet, Image, Pressable } from "react-native";
 import { useEffect, useState } from "react";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
