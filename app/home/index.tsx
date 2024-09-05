@@ -31,7 +31,7 @@ const Home = () => {
       const nextSlide = currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
       setCurrentSlide(nextSlide);
       scrollViewRef.current?.scrollTo({ x: nextSlide * width, animated: true });
-    }, 2000);
+    }, 1700);
   };
 
   useEffect(() => {
