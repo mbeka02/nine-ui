@@ -21,6 +21,16 @@ export function PendingCard() {
           <ThemedText style={{ color: "#9EDA6F" }}>0.458 APT</ThemedText>
         </View>
       </View>
+      <View style={styles.card}>
+        <View style={styles.top}>
+          <ThemedText style={{ color: "white" }}>0x0123456</ThemedText>
+          <ThemedText style={{ color: "white" }}>12th July, 2024</ThemedText>
+        </View>
+        <View style={styles.bottom}>
+          <ThemedText style={{ color: "white" }}>Jumia...</ThemedText>
+          <ThemedText style={{ color: "#9EDA6F" }}>0.458 APT</ThemedText>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 }
@@ -46,6 +56,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
     shadowOpacity: 0.1,
+    borderWidth: 1,
+    borderColor: "#9EDA6F",
 
     // opacity: 0.5
   },

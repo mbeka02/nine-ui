@@ -36,13 +36,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     width: "100%",
     borderRadius: 20,
-    marginVertical: 10,
+    marginBottom: 5,
     backgroundColor: "black",
     elevation: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
     shadowOpacity: 0.1,
+    borderWidth: 1,
+    borderColor: "#9EDA6F",
 
     // opacity: 0.5
   },

@@ -8,7 +8,7 @@ export default function PendingScreen() {
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Pending</ThemedText>
+        <ThemedText type="title">Previous Signed Requests</ThemedText>
       </ThemedView>
       <PendingCard />
     </ParallaxScrollView>

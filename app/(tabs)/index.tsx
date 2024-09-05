@@ -1,127 +1,263 @@
+import { View, Text, TextInput, Alert, StyleSheet, Image, Pressable } from "react-native";
+import { useEffect, useState } from "react";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { StyleSheet, Image, View, Pressable } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useUser } from "@clerk/clerk-expo";
-import { Feather } from "@expo/vector-icons";
+import { RequestCard } from "@/components/Screens/RequestCard";
+import * as SecureStore from "expo-secure-store";
+import * as LocalAuthentication from "expo-local-authentication";
+import { useRouter } from "expo-router";
+import React from "react";
+import PasscodeKeypad from "@/components/PasscodeKeypad";
+import { Pressable } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-import { FormButton } from "@/components/form/FormButton";
-import { useState } from "react";
-import { FormInput } from "@/components/form/FormInput";
-import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
-import { Alert } from "react-native";
-import * as expoImagePicker from "expo-image-picker";
-import "../../global";
-export default function ProfileScreen() {
-  const { user, isSignedIn, isLoaded } = useUser();
-  const [form, setForm] = useState({
-    firstName: user?.firstName || "",
-    lastName: user?.lastName || "",
-    username: user?.username || "",
-  });
+export default function HomeScreen() {
+  const router = useRouter();
+  const [authSuccess, setAuthSuccess] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [passcode, setPasscode] = useState("");
+  const [showPasscodePrompt, setShowPasscodePrompt] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
 
-  if (!isLoaded || !isSignedIn) {
-    return null;
-  }
+  const promptForPasscodeAuth = async () => {
+    const savedPasscode = await SecureStore.getItemAsync("userPasscode");
 
-  const onSubmit = async () => {
-    try {
-      await user.update({
-        firstName: form.firstName,
-        lastName: form.lastName,
-        username: form.username,
-      });
-      await user.reload();
-      Alert.alert("Success", "Profile updated successfully");
-    } catch (error: any) {
-      console.log(error.errors[0]);
-      Alert.alert("Error", "Failed to update profile");
+    if (savedPasscode) {
+      setShowPasscodePrompt(true);
     }
   };
-  /*const handleInputChange = (field: string) => (text: string) => {
-    setForm((prevForm) => ({ ...prevForm, [field]: text }));
-  };*/
-  const onPickImage = async () => {
-    try {
-      let result = await expoImagePicker.launchImageLibraryAsync({
-        mediaTypes: expoImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-        base64: true,
-      });
-      console.log(result);
 
-      if (!result.canceled && result.assets[0].base64) {
-        const base64 = result.assets[0].base64;
-        const mimeType = result.assets[0].mimeType;
-        const image = `data:${mimeType};base64,${base64}`;
-        await user.setProfileImage({ file: image });
-        await user.reload();
+  const handleKeyPress = (key) => {
+    if (passcode.length < 6) {
+      setPasscode(passcode + key);
+    }
+  };
+
+  const handleDelete = () => {
+    setPasscode(passcode.slice(0, -1));
+  };
+
+  const handlePasscodeSubmit = async () => {
+    const savedPasscode = await SecureStore.getItemAsync("userPasscode");
+
+    if (passcode === savedPasscode) {
+      setShowFeedback(true);
+      setShowPasscodePrompt(false);
+      setTimeout(() => {
+        setShowFeedback(false);
+        router.replace("/");
+      }, 900); // Delay navigation for 1 second
+    } else {
+      Alert.alert("Authentication failed", "Incorrect passcode.");
+    }
+  };
+
+  const promptForBiometricAuth = async () => {
+    const biometricSetupDone = await SecureStore.getItemAsync("biometricSetupDone");
+
+    if (biometricSetupDone) {
+      const result = await LocalAuthentication.authenticateAsync({
+        promptMessage: "Log in with your fingerprint",
+        fallbackLabel: "Use Passcode",
+      });
+
+      if (!result.success) {
+        Alert.alert("Authentication failed", "Unable to authenticate using biometrics.");
+      } else {
+        // Show the success feedback
+        setShowFeedback(true);
+        setTimeout(() => {
+          setShowFeedback(false);
+          router.replace("/");
+        }, 900); // Delay navigation for 1 second
       }
-    } catch (error: any) {
-      console.log(error.errors[0]);
-      Alert.alert("Error", "Failed to update profile picture");
     }
   };
+
+  useEffect(() => {
+  const checkRemindMeLater = async () => {
+    const remindMeLater = await SecureStore.getItemAsync("remindMeLater");
+    if (remindMeLater === "true") {
+      router.replace("/");
+    }
+  };
+
+  checkRemindMeLater();
+}, []);
+
+const authenticateUser = async () => {
+  const firstTimeLogin = await SecureStore.getItemAsync("firstTimeLogin");
+
+    // Skip authentication if the user has just completed setup
+    if (firstTimeLogin === "true") {
+      // Reset the flag after the first successful login
+      await SecureStore.setItemAsync("firstTimeLogin", "false");
+      return;
+    }
+
+  const passcodeSetupDone = await SecureStore.getItemAsync("userPasscode");
+  const biometricSetupDone = await SecureStore.getItemAsync("biometricSetupDone");
+
+  if (passcodeSetupDone) {
+    await promptForPasscodeAuth();
+  } else if (biometricSetupDone) {
+    await promptForBiometricAuth();
+  }
+};
+
+const renderCircles = (length) => {
+  return Array.from({ length: 6 }, (_, index) => (
+      <View
+          key={index}
+          style={[
+              styles.circle,
+              { backgroundColor: index < length ? "#9EDA6F" : "#808080" }
+          ]}
+      />
+  ));
+};
+
+useEffect(() => {
+  authenticateUser();
+}, []);
+
   return (
-    <ParallaxScrollView>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Edit Profile</ThemedText>
-      </ThemedView>
-      <View className="relative w-24 h-24 mx-auto">
-        <Image
-          source={
-            user?.imageUrl
-              ? { uri: user?.imageUrl }
-              : require("@/assets/images/default-profile-pic.png")
-          }
-          className="w-full h-full rounded-full border-solid border-2 border-custom"
-        />
-        <Pressable
-          className="h-8 w-8 flex bg-white rounded-full  justify-center items-center absolute bottom-0 -right-2 "
-          onPress={onPickImage}
-        >
-          <Feather name="edit" size={20} />
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Image source={require('@/assets/images/ninepay.png')} style={styles.logo} />
+        
+        <Pressable onPress={() => Alert.alert('Notifications clicked')} style={styles.notifications}>
+          <Ionicons name="notifications-outline" size={24} color="white" />
         </Pressable>
       </View>
-      <FormInput
-        placeholder="Harry"
-        title="firstname"
-        value={form.firstName}
-        className="mt-8"
-        handleChangeText={(e: NativeSyntheticEvent<TextInputChangeEventData>) =>
-          setForm({ ...form, firstName: e.nativeEvent.text })
-        }
-      />
-      <FormInput
-        placeholder="Du Bois"
-        title="lastname"
-        value={form.lastName}
-        className="mt-8"
-        handleChangeText={(e: NativeSyntheticEvent<TextInputChangeEventData>) =>
-          setForm({ ...form, lastName: e.nativeEvent.text })
-        }
-      />
-      <FormInput
-        placeholder="eg. gary02"
-        title="username"
-        value={form.username}
-        className="mt-8"
-        handleChangeText={(e: NativeSyntheticEvent<TextInputChangeEventData>) =>
-          setForm({ ...form, username: e.nativeEvent.text })
-        }
-      />
-      <FormButton title="update" handlePress={onSubmit} />
-    </ParallaxScrollView>
+      <View style={styles.line} />
+      
+      <ParallaxScrollView>
+        <RequestCard />
+      </ParallaxScrollView>
+
+      {showPasscodePrompt && (
+        <View style={styles.passcodeOverlay}>
+          <Image source={require('@/assets/images/ninepay.png')} style={styles.logo} />
+          <View style={styles.circlesContainer}>
+                {renderCircles(isConfirming ? confirmPasscode.length : passcode.length)}
+          </View>
+          <PasscodeKeypad
+            onKeyPress={handleKeyPress}
+            onDelete={handleDelete}
+          />
+          
+          <Pressable
+                style={({ pressed }) => [
+                    styles.button,
+                    { opacity: pressed ? 0.7 : 1 }
+                ]}
+                onPress={handlePasscodeSubmit}
+            >
+                <Text style={styles.buttonText}>Submit</Text>
+            </Pressable>
+        </View>
+      )}
+
+      {showFeedback && (
+        <View style={styles.feedbackOverlay}>
+          <Image source={require('@/assets/images/checkmark.png')} style={styles.checkmark} />
+          <Text style={styles.successText}>Authentication Successful</Text>
+        </View>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+  },
+  header: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
+    paddingTop: 28,
+    paddingBottom: 0,
+  },
+  logo: {
+    width: 110,
+    height: 50,
+    objectFit: "contain",
+  },
+  notifications: {
+    paddingRight: 19,
+  },
+  line: {
+    height: 1,
+    backgroundColor: "#E5E4E2",
+    marginHorizontal: 10,
+  },
+  circlesContainer: {
+    flexDirection: "row",
     justifyContent: "center",
-    gap: 4,
+    marginBottom: 20,
+    marginTop: 20,
+  },
+  circle: {
+    width: 17,
+    height: 17,
+    borderRadius: 8,
+    margin: 5,
+    backgroundColor: "#E5E4E2",
+  },
+  passcodeOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "black",
+    zIndex: 1000, // Ensure it appears on top of other components
+  },
+  passcodeInput: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
+    fontSize: 18,
+    marginBottom: 20,
+    width: 200,
+    textAlign: "center",
+  },
+  submitButton: {
+    color: "#9EDA6F",
+    fontSize: 18,
+  },
+  feedbackOverlay: {
+    ...StyleSheet.absoluteFillObject, // Fills the entire screen
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+  },
+  checkmark: {
+    width: 100,
+    height: 100,
+    tintColor: "#9EDA6F", // Green color for success
+  },
+  successText: {
+    color: "#9EDA6F",
+    fontSize: 20,
+  },
+  button: {
+    backgroundColor: "#9EDA6F",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 36,
+    marginHorizontal: 10,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#000",
+    fontSize: 19,
+    fontWeight: "500",
+    textAlign: "center",
   },
 });
