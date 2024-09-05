@@ -1428,10 +1428,10 @@
   resolved "https://registry.npmjs.org/@emotion/weak-memoize/-/weak-memoize-0.3.1.tgz"
   integrity sha512-EsBwpc7hBUJWAsNPBmJy4hxWx12v6bshQsldrVmjxJoc3isbxhOrF2IcCpaXxfvq03NwkI7sbsOLXbYuqF/8Ww==
 
-"@esbuild/win32-x64@0.23.1":
+"@esbuild/linux-x64@0.23.1":
   version "0.23.1"
-  resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.23.1.tgz"
-  integrity sha512-BHpFFeslkWrXWyUPnbKm+xYYVYruCinGcftSBaa8zoF9hZO4BcSCFUvHVTtzpIY6YzUnYtuEhZ+C9iEXjxnasg==
+  resolved "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.23.1.tgz"
+  integrity sha512-EV6+ovTsEXCPAp58g2dD68LxoP/wK5pRvgy0J/HxPGB009omFPv3Yet0HiaqvrIrgPTBuC6wCH1LTOY91EO5hQ==
 
 "@expo/bunyan@^4.0.0":
   version "4.0.1"
@@ -2783,10 +2783,15 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@swc/core-win32-x64-msvc@1.7.19":
+"@swc/core-linux-x64-gnu@1.7.19":
   version "1.7.19"
-  resolved "https://registry.npmjs.org/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.7.19.tgz"
-  integrity sha512-dZW9Vg2CFJlo3d31ozSoCNdS/G6khS+9Z1g/aNarpjvRy5HyeD5ls0Nm2iM0yx4ZS4qscZAHA+0R8sibtIqhcw==
+  resolved "https://registry.npmjs.org/@swc/core-linux-x64-gnu/-/core-linux-x64-gnu-1.7.19.tgz"
+  integrity sha512-uKDuYb8TnUA1c+aTdKEYGb4f9uNX+brneyvp5yCJHR9yfR3pRlEFeTXwJaWRtSm8fNvaF2fDzd2FNBRAFAxgJw==
+
+"@swc/core-linux-x64-musl@1.7.19":
+  version "1.7.19"
+  resolved "https://registry.npmjs.org/@swc/core-linux-x64-musl/-/core-linux-x64-musl-1.7.19.tgz"
+  integrity sha512-2Ke6glKK7y2Xf1ZZ8QXxT2r88KR2qpVzQnCDUrFr8jivg5OZ1+53ZExKIxaJFw+BWY69wy8EebK03Q1RxVDvqQ==
 
 "@swc/core@^1.5.25":
   version "1.7.19"
@@ -8025,15 +8030,25 @@ lighthouse-logger@^1.0.0:
     debug "^2.6.9"
     marky "^1.2.2"
 
-lightningcss-win32-x64-msvc@1.19.0:
+lightningcss-linux-x64-gnu@1.19.0:
   version "1.19.0"
-  resolved "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.19.0.tgz"
-  integrity sha512-C+VuUTeSUOAaBZZOPT7Etn/agx/MatzJzGRkeV+zEABmPuntv1zihncsi+AyGmjkkzq3wVedEy7h0/4S84mUtg==
+  resolved "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.19.0.tgz"
+  integrity sha512-0AFQKvVzXf9byrXUq9z0anMGLdZJS+XSDqidyijI5njIwj6MdbvX2UZK/c4FfNmeRa2N/8ngTffoIuOUit5eIQ==
 
-lightningcss-win32-x64-msvc@1.22.0:
+lightningcss-linux-x64-gnu@1.22.0:
   version "1.22.0"
-  resolved "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.22.0.tgz"
-  integrity sha512-64HTDtOOZE9PUCZJiZZQpyqXBbdby1lnztBccnqh+NtbKxjnGzP92R2ngcgeuqMPecMNqNWxgoWgTGpC+yN5Sw==
+  resolved "https://registry.npmjs.org/lightningcss-linux-x64-gnu/-/lightningcss-linux-x64-gnu-1.22.0.tgz"
+  integrity sha512-grdrhYGRi2KrR+bsXJVI0myRADqyA7ekprGxiuK5QRNkv7kj3Yq1fERDNyzZvjisHwKUi29sYMClscbtl+/Zpw==
+
+lightningcss-linux-x64-musl@1.19.0:
+  version "1.19.0"
+  resolved "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.19.0.tgz"
+  integrity sha512-SJoM8CLPt6ECCgSuWe+g0qo8dqQYVcPiW2s19dxkmSI5+Uu1GIRzyKA0b7QqmEXolA+oSJhQqCmJpzjY4CuZAg==
+
+lightningcss-linux-x64-musl@1.22.0:
+  version "1.22.0"
+  resolved "https://registry.npmjs.org/lightningcss-linux-x64-musl/-/lightningcss-linux-x64-musl-1.22.0.tgz"
+  integrity sha512-t5f90X+iQUtIyR56oXIHMBUyQFX/zwmPt72E6Dane3P8KNGlkijTg2I75XVQS860gNoEFzV7Mm5ArRRA7u5CAQ==
 
 lightningcss@~1.19.0:
   version "1.19.0"

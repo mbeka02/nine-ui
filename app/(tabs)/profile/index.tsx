@@ -89,7 +89,7 @@ export default function ProfileScreen() {
         placeholder="Harry"
         title="firstname"
         value={form.firstName}
-        className="mt-8"
+        className="mt-4"
         handleChangeText={(e: NativeSyntheticEvent<TextInputChangeEventData>) =>
           setForm({ ...form, firstName: e.nativeEvent.text })
         }
@@ -98,7 +98,7 @@ export default function ProfileScreen() {
         placeholder="Du Bois"
         title="lastname"
         value={form.lastName}
-        className="mt-8"
+        className="mt-4"
         handleChangeText={(e: NativeSyntheticEvent<TextInputChangeEventData>) =>
           setForm({ ...form, lastName: e.nativeEvent.text })
         }
@@ -107,7 +107,7 @@ export default function ProfileScreen() {
         placeholder="eg. gary02"
         title="username"
         value={form.username}
-        className="mt-8"
+        className="mt-4"
         handleChangeText={(e: NativeSyntheticEvent<TextInputChangeEventData>) =>
           setForm({ ...form, username: e.nativeEvent.text })
         }

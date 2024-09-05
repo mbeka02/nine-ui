@@ -28,7 +28,7 @@ export default function HomeScreen() {
     }
   };
 
-  const handleKeyPress = (key) => {
+  const handleKeyPress = (key: string) => {
     if (passcode.length < 6) {
       setPasscode(passcode + key);
     }
@@ -54,7 +54,9 @@ export default function HomeScreen() {
   };
 
   const promptForBiometricAuth = async () => {
-    const biometricSetupDone = await SecureStore.getItemAsync("biometricSetupDone");
+    const biometricSetupDone = await SecureStore.getItemAsync(
+      "biometricSetupDone"
+    );
 
     if (biometricSetupDone) {
       const result = await LocalAuthentication.authenticateAsync({
@@ -63,7 +65,10 @@ export default function HomeScreen() {
       });
 
       if (!result.success) {
-        Alert.alert("Authentication failed", "Unable to authenticate using biometrics.");
+        Alert.alert(
+          "Authentication failed",
+          "Unable to authenticate using biometrics."
+        );
       } else {
         // Show the success feedback
         setShowFeedback(true);
@@ -76,18 +81,18 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-  const checkRemindMeLater = async () => {
-    const remindMeLater = await SecureStore.getItemAsync("remindMeLater");
-    if (remindMeLater === "true") {
-      router.replace("/");
-    }
-  };
+    const checkRemindMeLater = async () => {
+      const remindMeLater = await SecureStore.getItemAsync("remindMeLater");
+      if (remindMeLater === "true") {
+        router.replace("/");
+      }
+    };
 
-  checkRemindMeLater();
-}, []);
+    checkRemindMeLater();
+  }, []);
 
-const authenticateUser = async () => {
-  const firstTimeLogin = await SecureStore.getItemAsync("firstTimeLogin");
+  const authenticateUser = async () => {
+    const firstTimeLogin = await SecureStore.getItemAsync("firstTimeLogin");
 
     // Skip authentication if the user has just completed setup
     if (firstTimeLogin === "true") {
@@ -96,73 +101,86 @@ const authenticateUser = async () => {
       return;
     }
 
-  const passcodeSetupDone = await SecureStore.getItemAsync("userPasscode");
-  const biometricSetupDone = await SecureStore.getItemAsync("biometricSetupDone");
+    const passcodeSetupDone = await SecureStore.getItemAsync("userPasscode");
+    const biometricSetupDone = await SecureStore.getItemAsync(
+      "biometricSetupDone"
+    );
 
-  if (passcodeSetupDone) {
-    await promptForPasscodeAuth();
-  } else if (biometricSetupDone) {
-    await promptForBiometricAuth();
-  }
-};
+    if (passcodeSetupDone) {
+      await promptForPasscodeAuth();
+    } else if (biometricSetupDone) {
+      await promptForBiometricAuth();
+    }
+  };
 
-const renderCircles = (length) => {
-  return Array.from({ length: 6 }, (_, index) => (
+  const renderCircles = (length: number) => {
+    return Array.from({ length: 6 }, (_, index) => (
       <View
-          key={index}
-          style={[
-              styles.circle,
-              { backgroundColor: index < length ? "#9EDA6F" : "#808080" }
-          ]}
+        key={index}
+        style={[
+          styles.circle,
+          { backgroundColor: index < length ? "#9EDA6F" : "#808080" },
+        ]}
       />
-  ));
-};
+    ));
+  };
 
-useEffect(() => {
-  authenticateUser();
-}, []);
+  useEffect(() => {
+    authenticateUser();
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image source={require('@/assets/images/ninepay.png')} style={styles.logo} />
-        
-        <Pressable onPress={() => Alert.alert('Notifications clicked')} style={styles.notifications}>
+        <Image
+          source={require("@/assets/images/ninepay.png")}
+          style={styles.logo}
+        />
+
+        <Pressable
+          onPress={() => Alert.alert("Notifications clicked")}
+          style={styles.notifications}
+        >
           <Ionicons name="notifications-outline" size={24} color="white" />
         </Pressable>
       </View>
       <View style={styles.line} />
-      
+
       <ParallaxScrollView>
         <RequestCard />
       </ParallaxScrollView>
 
       {showPasscodePrompt && (
         <View style={styles.passcodeOverlay}>
-          <Image source={require('@/assets/images/ninepay.png')} style={styles.logo} />
-          <View style={styles.circlesContainer}>
-                {renderCircles(isConfirming ? confirmPasscode.length : passcode.length)}
-          </View>
-          <PasscodeKeypad
-            onKeyPress={handleKeyPress}
-            onDelete={handleDelete}
+          <Image
+            source={require("@/assets/images/ninepay.png")}
+            style={styles.logo}
           />
-          
+          <View style={styles.circlesContainer}>
+            {renderCircles(
+              isConfirming ? confirmPasscode.length : passcode.length
+            )}
+          </View>
+          <PasscodeKeypad onKeyPress={handleKeyPress} onDelete={handleDelete} />
+
           <Pressable
-                style={({ pressed }) => [
-                    styles.button,
-                    { opacity: pressed ? 0.7 : 1 }
-                ]}
-                onPress={handlePasscodeSubmit}
-            >
-                <Text style={styles.buttonText}>Submit</Text>
-            </Pressable>
+            style={({ pressed }) => [
+              styles.button,
+              { opacity: pressed ? 0.7 : 1 },
+            ]}
+            onPress={handlePasscodeSubmit}
+          >
+            <Text style={styles.buttonText}>Submit</Text>
+          </Pressable>
         </View>
       )}
 
       {showFeedback && (
         <View style={styles.feedbackOverlay}>
-          <Image source={require('@/assets/images/checkmark.png')} style={styles.checkmark} />
+          <Image
+            source={require("@/assets/images/checkmark.png")}
+            style={styles.checkmark}
+          />
           <Text style={styles.successText}>Authentication Successful</Text>
         </View>
       )}
