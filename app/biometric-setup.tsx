@@ -74,7 +74,7 @@ const BiometricSetup = () => {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Image source={require('@/assets/images/fingerprint.png')} style={styles.logo} />
+          <Image source={require('@/assets/images/print1.png')} style={styles.logo} />
           <Text style={styles.bannerText}>
             Use biometrics to quickly and securely log in, approve transactions, and unlock this app. Or set a passcode for unlocking this app.
           </Text>
@@ -91,7 +91,7 @@ const BiometricSetup = () => {
               <Text style={styles.buttonText}>Set up biometrics</Text>
             </Pressable>
   
-            {/* <Pressable
+            <Pressable
               style={({ pressed }) => [
                 styles.button,
                 { opacity: pressed ? 0.7 : 1 }
@@ -99,7 +99,7 @@ const BiometricSetup = () => {
               onPress={() => router.push("/setup-passcode")}
             >
               <Text style={styles.buttonText1}>Set passcode</Text>
-            </Pressable> */}
+            </Pressable>
             
             <Pressable
               style={({ pressed }) => [
@@ -118,6 +118,15 @@ const BiometricSetup = () => {
         ) : (
             <>
           <Text style={styles.error}>Either biometric authentication is not supported on this device or has not been setup in your Security Settings</Text>
+          <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                { opacity: pressed ? 0.7 : 1 }
+              ]}
+              onPress={() => router.push("/setup-passcode")}
+            >
+              <Text style={styles.buttonText1}>Set passcode</Text>
+            </Pressable>
           <Pressable
               style={({ pressed }) => [
                 styles.button2,

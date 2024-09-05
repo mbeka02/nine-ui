@@ -36,11 +36,12 @@ const InitialLayout = () => {
 
       const inTabsGroup = segments[0] === "(tabs)";
       const biometricSetupDone = await isBiometricSetup();
+      const passcodeSetupDone = await SecureStore.getItemAsync("userPasscode");
 
       console.log('Biometric Setup Done:', biometricSetupDone); // Debugging line
-      
+
       if (isSignedIn) {
-        if (!biometricSetupDone) {
+        if (!biometricSetupDone && !passcodeSetupDone) {
           router.replace("/biometric-setup");
         } else if (!inTabsGroup) {
           router.replace("/");
@@ -106,6 +107,7 @@ export default function RootLayout() {
   }
 
   return (
+    
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
       <ClerkLoaded>
         <ThemeProvider value={DarkTheme}>

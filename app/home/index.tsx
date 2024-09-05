@@ -66,7 +66,10 @@ const Home = () => {
       >
         {slides.map((slide, index) => (
           <View style={styles.slide} key={index}>
-            <Image source={slide.image} style={styles.image} />
+            <Image
+              source={slide.image}
+              style={[styles.image, slide.image === require('@/assets/images/fingerp.png') && styles.fingerImage]}
+            />
             <Text style={styles.description}>{slide.text}</Text>
           </View>
         ))}
@@ -115,6 +118,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 300,
     resizeMode: "cover",
+  },
+  fingerImage: {
+    width: "80%", // Adjust the width as needed
+    resizeMode: "contain",
   },
   description: {
     fontSize: 18,

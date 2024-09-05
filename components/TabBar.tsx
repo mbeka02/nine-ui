@@ -28,6 +28,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
   const doLogout = async () => {
     await SecureStore.deleteItemAsync("biometricSetupDone");//add log to see if it is deleted
+    await SecureStore.deleteItemAsync("userPasscode");//add log to see if it is deleted
     signOut();
   };
   const buttonWidth = dimensions.width / 4;
@@ -46,7 +47,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   return (
     <>
       <Modal isOpen={isOpen}>
-        <View className="shadow-lg space-y-4 justify-center bg-black   rounded-xl px-4 h-1/4 w-4/5">
+        <View className=" shadow-2xl space-y-4 justify-center bg-black-default border-customGreen border-2  rounded-3xl px-4 h-1/4 w-5/6">
           <Pressable
             onPress={doLogout}
             className=" bg-customGreen min-h-[50px] flex flex-row justify-center items-center    rounded-3xl "
@@ -148,12 +149,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "black", //"#151718",
-    marginHorizontal: 40,
-    paddingVertical: 15,
-    borderRadius: 35,
+    marginHorizontal: 30,
+    paddingVertical: 14,
+    borderRadius: 8,
+    borderStyle: "solid",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
     shadowOpacity: 0.1,
+    borderTopWidth: 1,
+    borderColor: "#9EDA6F",
   },
 });
