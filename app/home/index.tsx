@@ -91,7 +91,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000000",
+    backgroundColor: "#0d0d0d",
   },
   header: {
     alignItems: 'center', // Center items horizontally
@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 36,
     marginHorizontal: 10,
+    
   },
   buttonText: {
     color: "#000000",

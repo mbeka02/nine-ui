@@ -23,7 +23,7 @@ import * as SecureStore from "expo-secure-store";
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { signOut } = useAuth();
-  const [dimensions, setDimensions] = useState({ height: 20, width: 100 });
+  const [dimensions, setDimensions] = useState({ height: 20, width: 20 });
   const [isOpen, setIsOpen] = useState(false);
 
   const doLogout = async () => {
@@ -31,7 +31,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
     await SecureStore.deleteItemAsync("userPasscode");//add log to see if it is deleted
     signOut();
   };
-  const buttonWidth = dimensions.width / 4;
+  const buttonWidth = dimensions.width / 4.4;
   const onTabbarLayout = (e: LayoutChangeEvent) => {
     setDimensions({
       height: e.nativeEvent.layout.height,
@@ -47,7 +47,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   return (
     <>
       <Modal isOpen={isOpen}>
-        <View className=" shadow-2xl space-y-4 justify-center bg-black-default border-customGreen border-2  rounded-3xl px-4 h-1/4 w-5/6">
+        <View className=" shadow-2xl space-y-4 justify-center bg-customBackground border-customBorder border-2  rounded-3xl px-4 h-1/4 w-11/12">
           <Pressable
             onPress={doLogout}
             className=" bg-customGreen min-h-[50px] flex flex-row justify-center items-center    rounded-3xl "
@@ -57,7 +57,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
           <Pressable
             onPress={() => setIsOpen(false)}
-            className="border-solid border-2 border-customGreen min-h-[50px]  flex flex-row justify-center items-center mt-4   rounded-3xl "
+            className="border-solid border-2 border-customBorder min-h-[50px]  flex flex-row justify-center items-center mt-4   rounded-3xl "
           >
             <Text className={`text-customGreen font-semibold text-lg `}>
               Cancel
@@ -72,10 +72,11 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             animatedStyle,
             {
               position: "absolute",
-              backgroundColor: "#9EDA6F",
+              backgroundColor: "rgba(158, 218, 111, 0.9)",
               borderRadius: 999,
-              //marginHorizontal: 12,
-              height: dimensions.height - 10,
+              marginHorizontal: 12,
+              
+              height: dimensions.height - 15,
               width: buttonWidth,
             },
           ]}
@@ -148,9 +149,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "black", //"#151718",
-    marginHorizontal: 30,
+    marginHorizontal: 14,
     paddingVertical: 14,
+    
     borderRadius: 8,
     borderStyle: "solid",
     shadowColor: "#000",
@@ -158,6 +159,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOpacity: 0.1,
     borderTopWidth: 1,
-    borderColor: "#9EDA6F",
+    backgroundColor: "#202020",
+    borderColor: "rgba(158, 218, 111, 0.4)",
   },
 });

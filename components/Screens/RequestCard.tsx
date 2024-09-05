@@ -37,14 +37,15 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 20,
     marginBottom: 5,
-    backgroundColor: "black",
+    backgroundColor: "#202020",
+    borderColor: "rgba(158, 218, 111, 0.4)",
     elevation: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
     shadowOpacity: 0.1,
     borderWidth: 1,
-    borderColor: "#9EDA6F",
+    
 
     // opacity: 0.5
   },

@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject, // Fills the entire screen
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent background
   },
   checkmark: {
     width: 100,

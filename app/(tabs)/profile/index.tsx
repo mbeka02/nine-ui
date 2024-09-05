@@ -87,7 +87,7 @@ export default function ProfileScreen() {
       </View>
       <FormInput
         placeholder="Harry"
-        title="firstname"
+        title="Firstname"
         value={form.firstName}
         className="mt-8"
         handleChangeText={(e: NativeSyntheticEvent<TextInputChangeEventData>) =>
@@ -96,23 +96,23 @@ export default function ProfileScreen() {
       />
       <FormInput
         placeholder="Du Bois"
-        title="lastname"
+        title="Lastname"
         value={form.lastName}
-        className="mt-8"
+        className="mt-0"
         handleChangeText={(e: NativeSyntheticEvent<TextInputChangeEventData>) =>
           setForm({ ...form, lastName: e.nativeEvent.text })
         }
       />
       <FormInput
         placeholder="eg. gary02"
-        title="username"
+        title="Username"
         value={form.username}
-        className="mt-8"
+        className="mt-4"
         handleChangeText={(e: NativeSyntheticEvent<TextInputChangeEventData>) =>
           setForm({ ...form, username: e.nativeEvent.text })
         }
       />
-      <FormButton title="update" handlePress={onSubmit} />
+      <FormButton title="Update" handlePress={onSubmit} />
     </ParallaxScrollView>
   );
 }

@@ -35,9 +35,9 @@ const FormInput = ({
     <View className={`space-y-1  ${className}`}>
       <Text className="text-base text-white font-medium mt-6   ">{title}</Text>
 
-      <View className="w-full  h-12 px-4 text-black  border border-gray-100 rounded-2xl  focus:border-customGreen flex flex-row items-center">
+      <View className="w-full  h-12 px-4 text-black border border-customBorderwhite rounded-2xl  focus:border-customGreen flex flex-row items-center">
         <TextInput
-          className="flex-1  text-black placeholder:text-gray-100/80 placeholder:font-medium placeholder:text-sm font-semibold text-base"
+          className="flex-1  text-black  placeholder:text-gray-100/80 placeholder:font-medium placeholder:text-sm font-semibold text-base"
           value={inputText}
           placeholder={placeholder}
           onChange={handleChangeText}
