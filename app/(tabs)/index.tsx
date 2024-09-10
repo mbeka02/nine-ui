@@ -147,7 +147,7 @@ export default function HomeScreen() {
       <View style={styles.line} />
 
       <ParallaxScrollView>
-        <RequestCard payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024"/>
+        <RequestCard payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024" requestID="1" />
       </ParallaxScrollView>
 
       {showPasscodePrompt && (

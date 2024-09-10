@@ -3,15 +3,26 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import petra from "@/components/wallet/petra";
+import {useGlobalSearchParams} from "expo-router";
 import "../../global"
 
 export default function Pay() {
+    let local: {
+        payee_address: string;
+        amount: string;
+        requestID: string;
+        reason: string;
+        requestedDate: string;
+    } = useGlobalSearchParams();
+
+    const payee_address = local.payee_address; 
+    const amount = Number.parseFloat(local.amount); 
+    const request_id = local.requestID; 
+    const reason = local.reason;
+    const requestedDate = local.requestedDate;
+
     function handlePay() {
-        
-        const payee_address = "0x1dc1d5999fc92580f0324e270318ce6465a428d30e2d488b0471fd764aad39cc"
-        const amount = 1000000
-        const request_id = "This is the request id"
-    petra.signAndSumbitTransaction({ payee_address: payee_address, amount: amount, request_id: request_id })
+        petra.signAndSumbitTransaction({ payee_address: payee_address, amount: amount, request_id: request_id })
     }
     return (
         <ParallaxScrollView>
@@ -19,9 +30,10 @@ export default function Pay() {
                 <ThemedText type="title">Pay Request</ThemedText>
             </ThemedView>
             <View>
-                <ThemedText>0x0123456...</ThemedText>
-                <ThemedText>Reason: Jumia....</ThemedText>
-                <ThemedText>Amount: 5APT</ThemedText>
+                <ThemedText>{`Payee Address: ${payee_address}`}</ThemedText>
+                <ThemedText>{`Reason: ${reason}`}</ThemedText>
+                <ThemedText>{`Requesed Date: ${requestedDate}`}</ThemedText>
+                <ThemedText>{`Amount: ${amount} APT`}</ThemedText>
             </View>
             <View style={styles.buttons}>
                 <Pressable style={styles.button} onPress={() => { }}>

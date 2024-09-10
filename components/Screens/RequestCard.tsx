@@ -1,20 +1,27 @@
 import { View, Text, StyleSheet, Alert, Pressable } from "react-native";
 import { ThemedText } from "../ThemedText";
+import {Link, router} from "expo-router";
+
 type Props = {
   payeeAddress: string;
   amount: number;
   date: string;
+  requestID: string;
   reason: string;
 };
 
 export function RequestCard(args: Props) {
-
-  function makePayment() {
-    Alert.alert(`A payment for ${args.amount} is being made`);
-  }
-
   return (
-    <Pressable onPress={makePayment}>
+    <Link push href={{
+        pathname: "/pay",
+        params: {
+          payee_address: args.payeeAddress,
+          amount: args.amount.toString(),
+          requestID: args.requestID,
+          reason: args.reason,
+          requestedDate: args.date 
+        }
+        }}>
         <View style={styles.card}>
             <View style={styles.top}>
                 <ThemedText style={{ color: "white" }}>{args.payeeAddress}</ThemedText>
@@ -25,7 +32,7 @@ export function RequestCard(args: Props) {
                 <ThemedText style={styles.amount}>{`${args.amount} APT`}</ThemedText>
             </View>
         </View>
-    </Pressable>
+    </Link> 
   );
 }
 const styles = StyleSheet.create({
