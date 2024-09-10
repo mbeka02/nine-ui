@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import { ThemedText } from "../ThemedText";
 type Props = {
   payeeAddress: string;
@@ -7,16 +7,21 @@ type Props = {
   reason: string;
 };
 
-export function RequestCard() {
+export function RequestCard(args: Props) {
+
+  function makePayment() {
+    Alert.alert(`A payment for ${args.amount} is being made`);
+  }
+
   return (
     <View style={styles.card}>
       <View style={styles.top}>
-        <ThemedText style={{ color: "white" }}>0x0123456</ThemedText>
-        <ThemedText style={{ color: "white" }}>12th July, 2024</ThemedText>
+        <ThemedText style={{ color: "white" }}>{args.payeeAddress}</ThemedText>
+        <ThemedText style={{ color: "white" }}>{args.date}</ThemedText>
       </View>
       <View style={styles.bottom}>
-        <ThemedText style={{ color: "white" }}>Jumia...</ThemedText>
-        <ThemedText style={styles.amount}>0.458 APT</ThemedText>
+        <ThemedText style={{ color: "white" }}>{args.reason}</ThemedText>
+        <ThemedText style={styles.amount}>{`${args.amount} APT`}</ThemedText>
       </View>
     </View>
   );
