@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert, Pressable } from "react-native";
 import { ThemedText } from "../ThemedText";
 type Props = {
   payeeAddress: string;
@@ -14,16 +14,18 @@ export function RequestCard(args: Props) {
   }
 
   return (
-    <View style={styles.card}>
-      <View style={styles.top}>
-        <ThemedText style={{ color: "white" }}>{args.payeeAddress}</ThemedText>
-        <ThemedText style={{ color: "white" }}>{args.date}</ThemedText>
-      </View>
-      <View style={styles.bottom}>
-        <ThemedText style={{ color: "white" }}>{args.reason}</ThemedText>
-        <ThemedText style={styles.amount}>{`${args.amount} APT`}</ThemedText>
-      </View>
-    </View>
+    <Pressable onPress={makePayment}>
+        <View style={styles.card}>
+            <View style={styles.top}>
+                <ThemedText style={{ color: "white" }}>{args.payeeAddress}</ThemedText>
+                <ThemedText style={{ color: "white" }}>{args.date}</ThemedText>
+            </View>
+            <View style={styles.bottom}>
+                <ThemedText style={{ color: "white" }}>{args.reason}</ThemedText>
+                <ThemedText style={styles.amount}>{`${args.amount} APT`}</ThemedText>
+            </View>
+        </View>
+    </Pressable>
   );
 }
 const styles = StyleSheet.create({
