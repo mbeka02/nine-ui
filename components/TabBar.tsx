@@ -27,11 +27,11 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const doLogout = async () => {
-    await SecureStore.deleteItemAsync("biometricSetupDone");//add log to see if it is deleted
-    await SecureStore.deleteItemAsync("userPasscode");//add log to see if it is deleted
+    await SecureStore.deleteItemAsync("biometricSetupDone"); //add log to see if it is deleted
+    await SecureStore.deleteItemAsync("userPasscode"); //add log to see if it is deleted
     signOut();
   };
-  const buttonWidth = dimensions.width / 4.4;
+  const buttonWidth = dimensions.width / 4;
   const onTabbarLayout = (e: LayoutChangeEvent) => {
     setDimensions({
       height: e.nativeEvent.layout.height,
@@ -74,8 +74,10 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               position: "absolute",
               backgroundColor: "rgba(158, 218, 111, 0.9)",
               borderRadius: 999,
-              marginHorizontal: 12,
-              
+
+              //this is breaking the tab bar layout on some devices
+              //     marginHorizontal: 12,
+
               height: dimensions.height - 15,
               width: buttonWidth,
             },
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 14,
     paddingVertical: 14,
-    
+
     borderRadius: 8,
     borderStyle: "solid",
     shadowColor: "#000",
