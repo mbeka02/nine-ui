@@ -5,156 +5,176 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 
 const BiometricSetup = () => {
-    const router = useRouter();
-    const [isSupported, setIsSupported] = useState<boolean>(false);
-    const [authTypes, setAuthTypes] = useState<string[]>([]);
-  
-    useEffect(() => {
-      const checkBiometricSupport = async () => {
-        const compatible = await LocalAuthentication.hasHardwareAsync();
-        const enrolled = await LocalAuthentication.isEnrolledAsync();
-        const supportedTypes = await LocalAuthentication.supportedAuthenticationTypesAsync();
-  
-        console.log('Biometric hardware support:', compatible);
-        console.log('Biometrics enrolled:', enrolled);
-        console.log('Supported authentication types:', supportedTypes);
-  
-        if (compatible && enrolled && supportedTypes.length > 0) {
-          setIsSupported(true);
-          const types = supportedTypes.map(type => {
-            if (type === LocalAuthentication.AuthenticationType.FINGERPRINT) return 'Fingerprint';
-            if (type === LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION) return 'Facial Recognition';
-            if (type === LocalAuthentication.AuthenticationType.IRIS) return 'Iris Recognition';
-          });
-          setAuthTypes(types);
-        } else {
-          setIsSupported(false);
-        }
-      };
-  
-      checkBiometricSupport();
-    }, []);
-  
-    const setupBiometric = async () => {
-        // First authentication
-        const firstAttempt = await LocalAuthentication.authenticateAsync({
-          promptMessage: "Authenticate",
-          fallbackLabel: "Use Passcode",
+  const router = useRouter();
+  const [isSupported, setIsSupported] = useState<boolean>(false);
+  const [authTypes, setAuthTypes] = useState<string[]>([]);
+
+  useEffect(() => {
+    const checkBiometricSupport = async () => {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      const enrolled = await LocalAuthentication.isEnrolledAsync();
+      const supportedTypes =
+        await LocalAuthentication.supportedAuthenticationTypesAsync();
+
+      console.log("Biometric hardware support:", compatible);
+      console.log("Biometrics enrolled:", enrolled);
+      console.log("Supported authentication types:", supportedTypes);
+
+      if (compatible && enrolled && supportedTypes.length > 0) {
+        setIsSupported(true);
+        const types = supportedTypes.map((type) => {
+          if (type === LocalAuthentication.AuthenticationType.FINGERPRINT)
+            return "Fingerprint";
+          if (
+            type === LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION
+          )
+            return "Facial Recognition";
+          if (type === LocalAuthentication.AuthenticationType.IRIS)
+            return "Iris Recognition";
         });
-      
-        if (firstAttempt.success) {
-          // Second authentication for confirmation
-          const secondAttempt = await LocalAuthentication.authenticateAsync({
-            promptMessage: "Please Confirm Your Fingerprint",
-            fallbackLabel: "Use Passcode",
-          });
-      
-          if (secondAttempt.success) {
-            await storeData("biometricSetupDone", "true");
-            Alert.alert("Success", "Biometric authentication set up successfully!");
-            router.replace("/");
-          } else {
-            Alert.alert("Failed", `Biometric authentication setup failed during confirmation.`);
-          }
-        } else {
-          Alert.alert("Failed", `Biometric authentication setup failed during initial attempt.`);
-        }
-      };
-      
-  
-    const storeData = async (key: string, value: string) => {
-      try {
-        await SecureStore.setItemAsync(key, value);
-        console.log(`Data stored: ${key} = ${value}`);
-      } catch (error) {
-        console.error("Error storing data:", error);
+        setAuthTypes(types);
+      } else {
+        setIsSupported(false);
       }
     };
-  
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Image source={require('@/assets/images/print1.png')} style={styles.logo} />
-          <Text style={styles.bannerText}>
-            Use biometrics to quickly and securely log in, approve transactions, and unlock this app. Or set a passcode for unlocking this app.
-          </Text>
-        </View>
-        {isSupported ? (
-          <>
-            <Pressable
-              style={({ pressed }) => [
-                styles.button3,
-                { opacity: pressed ? 0.7 : 1 }
-              ]}
-              onPress={setupBiometric}
-            >
-              <Text style={styles.buttonText}>Set up biometrics</Text>
-            </Pressable>
-  
-            <Pressable
-              style={({ pressed }) => [
-                styles.button,
-                { opacity: pressed ? 0.7 : 1 }
-              ]}
-              onPress={() => router.push("/setup-passcode")}
-            >
-              <Text style={styles.buttonText1}>Set passcode</Text>
-            </Pressable>
-            
-            <Pressable
-              style={({ pressed }) => [
-                styles.button2,
-                { opacity: pressed ? 0.7 : 1 }
-              ]}
-              onPress={() => router.replace("/")}
-            >
-              <Text style={styles.buttonText}>Remind me later</Text>
-            </Pressable>
-  
-            {/* {authTypes.length > 0 && (
+
+    checkBiometricSupport();
+  }, []);
+
+  const setupBiometric = async () => {
+    // First authentication
+    const firstAttempt = await LocalAuthentication.authenticateAsync({
+      promptMessage: "Authenticate",
+      fallbackLabel: "Use Passcode",
+    });
+
+    if (firstAttempt.success) {
+      // Second authentication for confirmation
+      const secondAttempt = await LocalAuthentication.authenticateAsync({
+        promptMessage: "Please Confirm Your Fingerprint",
+        fallbackLabel: "Use Passcode",
+      });
+
+      if (secondAttempt.success) {
+        await storeData("biometricSetupDone", "true");
+        Alert.alert("Success", "Biometric authentication set up successfully!");
+        router.replace("/");
+      } else {
+        Alert.alert(
+          "Failed",
+          `Biometric authentication setup failed during confirmation.`
+        );
+      }
+    } else {
+      Alert.alert(
+        "Failed",
+        `Biometric authentication setup failed during initial attempt.`
+      );
+    }
+  };
+
+  const storeData = async (key: string, value: string) => {
+    try {
+      await SecureStore.setItemAsync(key, value);
+      console.log(`Data stored: ${key} = ${value}`);
+    } catch (error) {
+      console.error("Error storing data:", error);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Image
+          source={require("@/assets/images/print1.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.bannerText}>
+          Use biometrics to quickly and securely log in, approve transactions,
+          and unlock this app. Or set a passcode for unlocking this app.
+        </Text>
+      </View>
+      {isSupported ? (
+        <>
+          <Pressable
+            style={({ pressed }) => [
+              styles.button3,
+              { opacity: pressed ? 0.7 : 1 },
+            ]}
+            onPress={setupBiometric}
+          >
+            <Text style={styles.buttonText}>Set up biometrics</Text>
+          </Pressable>
+
+          <Pressable
+            style={({ pressed }) => [
+              styles.button,
+              { opacity: pressed ? 0.7 : 1 },
+            ]}
+            onPress={() => router.push("/setup-passcode")}
+          >
+            <Text style={styles.buttonText1}>Set passcode</Text>
+          </Pressable>
+
+          <Pressable
+            style={({ pressed }) => [
+              styles.button2,
+              { opacity: pressed ? 0.7 : 1 },
+            ]}
+            onPress={() => router.replace("/")}
+          >
+            <Text style={styles.buttonText}>Remind me later</Text>
+          </Pressable>
+
+          {/* {authTypes.length > 0 && (
               <Text style={styles.info}>Supported types: {authTypes.join(', ')}</Text>
             )} */}
-          </>
-        ) : (
-            <>
-          <Text style={styles.error}>Either biometric authentication is not supported on this device or has not been setup in your Security Settings</Text>
+        </>
+      ) : (
+        <>
+          <Text style={styles.error}>
+            Either biometric authentication is not supported on this device or
+            has not been setup in your Security Settings
+          </Text>
           <Pressable
-              style={({ pressed }) => [
-                styles.button,
-                { opacity: pressed ? 0.7 : 1 }
-              ]}
-              onPress={() => router.push("/setup-passcode")}
-            >
-              <Text style={styles.buttonText1}>Set passcode</Text>
-            </Pressable>
+            style={({ pressed }) => [
+              styles.button,
+              { opacity: pressed ? 0.7 : 1 },
+            ]}
+            onPress={() => router.push("/setup-passcode")}
+          >
+            <Text style={styles.buttonText1}>Set passcode</Text>
+          </Pressable>
           <Pressable
-              style={({ pressed }) => [
-                styles.button2,
-                { opacity: pressed ? 0.7 : 1 }
-              ]}
-              onPress={() => router.replace("/")}
-            >
-              <Text style={styles.buttonText}>Remind me later</Text>
-            </Pressable>
-            </>
-        )}
-      </View>
-    );
-  };
+            style={({ pressed }) => [
+              styles.button2,
+              { opacity: pressed ? 0.7 : 1 },
+            ]}
+            onPress={() => router.replace("/")}
+          >
+            <Text style={styles.buttonText}>Remind me later</Text>
+          </Pressable>
+        </>
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    // the banner text was overlapping with the buttons
+    // justifyContent: "center",
     padding: 20,
+    marginTop: 10,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   logo: {
     width: 350,
     height: 350,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   bannerText: {
     color: "#fff",

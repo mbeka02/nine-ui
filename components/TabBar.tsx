@@ -1,12 +1,9 @@
-import { Feather } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   LayoutChangeEvent,
-  Button,
   Pressable,
 } from "react-native";
 import TabBarButton from "./TabBarButton";
@@ -18,7 +15,6 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { Modal } from "./Modal";
-import { FormButton } from "./form/FormButton";
 import * as SecureStore from "expo-secure-store";
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
@@ -73,12 +69,12 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             {
               position: "absolute",
               backgroundColor: "rgba(158, 218, 111, 0.9)",
-              borderRadius: 999,
+              borderRadius: 99,
 
               //this is breaking the tab bar layout on some devices
               //     marginHorizontal: 12,
 
-              height: dimensions.height - 15,
+              height: dimensions.height - 3,
               width: buttonWidth,
             },
           ]}
@@ -145,7 +141,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 }
 
 const styles = StyleSheet.create({
-  tabbar: {
+  /* tabbar: {
     position: "absolute",
     bottom: 25,
     flexDirection: "row",
@@ -163,5 +159,22 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     backgroundColor: "#202020",
     borderColor: "rgba(158, 218, 111, 0.4)",
+  },*/
+  tabbar: {
+    position: "absolute",
+    bottom: 25,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#202020", //"#151718",
+    marginHorizontal: 20,
+    paddingVertical: 15,
+    borderRadius: 99,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 12 },
+    shadowRadius: 10,
+    shadowOpacity: 0.1,
+    borderColor: "rgba(158, 218, 111, 0.4)",
+    borderWidth: 1,
   },
 });
