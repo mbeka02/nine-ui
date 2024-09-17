@@ -11,6 +11,7 @@ import React from "react";
 import PasscodeKeypad from "@/components/PasscodeKeypad";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import testSendTransaction from "@/lib/test-transaction";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -148,6 +149,10 @@ export default function HomeScreen() {
 
       <ParallaxScrollView>
         <RequestCard payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024"/>
+
+        <Pressable onPress={testSendTransaction}>
+            <Ionicons name="notifications-outline" size={24} color={"white"} />
+        </Pressable>
       </ParallaxScrollView>
 
       {showPasscodePrompt && (

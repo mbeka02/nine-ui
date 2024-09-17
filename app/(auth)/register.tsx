@@ -6,6 +6,7 @@ import { Stack } from "expo-router";
 import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
 import { FormInput } from "@/components/form/FormInput";
 import { FormButton } from "@/components/form/FormButton";
+import userWallet from "@/lib/userWallet";
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
 
@@ -31,6 +32,9 @@ const Register = () => {
     setLoading(true);
 
     try {
+      // Creating user account
+      userWallet.init()
+
       // Create the user on Clerk
       await signUp.create({
         emailAddress: form.emailAddress,
