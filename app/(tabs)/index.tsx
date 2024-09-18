@@ -12,6 +12,7 @@ import PasscodeKeypad from "@/components/PasscodeKeypad";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import testSendTransaction from "@/lib/test-transaction";
+import userWallet from "@/lib/userWallet";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -112,6 +113,7 @@ export default function HomeScreen() {
     } else if (biometricSetupDone) {
       await promptForBiometricAuth();
     }
+    await userWallet.init();
   };
 
   const renderCircles = (length: number) => {

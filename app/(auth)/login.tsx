@@ -9,6 +9,7 @@ import { FormButton } from "@/components/form/FormButton";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import * as LocalAuthentication from "expo-local-authentication";
+import userWallet from "@/lib/userWallet";
 
 const Login = () => {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -47,6 +48,9 @@ const Login = () => {
 
       // This indicates the user is signed in
       await setActive({ session: completeSignIn.createdSessionId });
+
+      // Load wallet details
+      await userWallet.init()
 
       // Check if biometric setup is done
       await checkBiometricSetup();
