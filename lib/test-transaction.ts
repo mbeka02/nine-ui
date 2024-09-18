@@ -7,7 +7,7 @@ export default async function testSendTransaction() {
             sender: userWallet.signer?.accountAddress!,
             data: {
                 function: "0x1::aptos_account::transfer",
-                functionArguments: [userWallet.signer?.accountAddress, 10]
+                functionArguments: [userWallet.signer?.accountAddress, 1]
             }
         });
         console.log("1");
