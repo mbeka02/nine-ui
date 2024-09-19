@@ -1,5 +1,5 @@
 import { View, StyleSheet, Alert } from "react-native";
-import { useSignUp } from "@clerk/clerk-expo";
+import { getClerkInstance, useSignUp } from "@clerk/clerk-expo";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useState } from "react";
 import { Stack } from "expo-router";
@@ -9,9 +9,11 @@ import { FormButton } from "@/components/form/FormButton";
 import userWallet from "@/lib/userWallet";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import { useAuth } from "@clerk/clerk-expo";
 
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
+  const {getToken} = useAuth();
 
   const [form, setForm] = useState({
     emailAddress: "",
@@ -49,26 +51,30 @@ const Register = () => {
         projectId: Constants.expoConfig?.extra?.eas.projectId,
       });
 
-      // Send details to backend
-      console.log("Token => ", token.data, "Address => ", userWallet.account?.pubKey()['hexString']);
-        console.log("Backend URL =>", `${process.env.EXPO_PUBLIC_BACKEND_URL}/users/initialize`);
+      // Send verification Email
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      // change the UI to verify the email address
+      setPendingVerification(true);
+
+      const clerkInstance = getClerkInstance({ publishableKey: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY })
+      const sessionToken = await clerkInstance.session?.getToken();
+      console.log("Anthony Bust => ", sessionToken)
+
       await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/initialize`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+        },
         body: JSON.stringify({
             expoToken: token.data,
             address: userWallet.account?.pubKey()['hexString'],
         })
       }); 
       console.log("Done");
-
-      // Send verification Email
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
-      // change the UI to verify the email address
-      setPendingVerification(true);
     } catch (err: any) {
-      console.log(err.errors);
-      alert(err.errors[0].message);
+      // console.log(err.errors);
+      console.log(err);
+      // alert(err.errors[0].message);
     } finally {
       setLoading(false);
     }
