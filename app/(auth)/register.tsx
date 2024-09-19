@@ -7,6 +7,9 @@ import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
 import { FormInput } from "@/components/form/FormInput";
 import { FormButton } from "@/components/form/FormButton";
 import userWallet from "@/lib/userWallet";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
+
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
 
@@ -36,11 +39,27 @@ const Register = () => {
       userWallet.init()
 
       // Create the user on Clerk
-      await signUp.create({
+      let user = await signUp.create({
         emailAddress: form.emailAddress,
         password: form.password,
         username: form.username,
       });
+
+      const token = await Notifications.getExpoPushTokenAsync({
+        projectId: Constants.expoConfig?.extra?.eas.projectId,
+      });
+
+      // Send details to backend
+      console.log("Token => ", token.data, "Address => ", userWallet.account?.pubKey()['hexString']);
+        console.log("Backend URL =>", `${process.env.EXPO_PUBLIC_BACKEND_URL}/users/initialize`);
+      await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/initialize`, {
+        method: "POST",
+        body: JSON.stringify({
+            expoToken: token.data,
+            address: userWallet.account?.pubKey()['hexString'],
+        })
+      }); 
+      console.log("Done");
 
       // Send verification Email
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
