@@ -44,6 +44,9 @@ class UserWallet {
                 this.signer = this.signer = Account.fromPrivateKey({
                     privateKey: new Ed25519PrivateKey(new HexString(this.privateKey).toUint8Array())
                 });
+
+                console.log("Acount => ", this.account.address())
+
                 return;
             }
 
@@ -65,7 +68,7 @@ class UserWallet {
             // Fund account in order to create it
             await aptos.fundAccount({
                 accountAddress: this.signer.accountAddress,
-                amount: 1,
+                amount: 250000001,
               });
 
             console.log("Private Key => ", this.privateKey);
