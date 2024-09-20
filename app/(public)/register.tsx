@@ -1,5 +1,5 @@
 import { View, StyleSheet, Alert } from "react-native";
-import { getClerkInstance, useSignUp } from "@clerk/clerk-expo";
+import { useSignUp } from "@clerk/clerk-expo";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useState } from "react";
 import { Stack } from "expo-router";
@@ -7,6 +7,8 @@ import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
 import { FormInput } from "@/components/form/FormInput";
 import { FormButton } from "@/components/form/FormButton";
 import userWallet from "@/lib/userWallet";
+import * as SecureStore from "expo-secure-store";
+import { FALSE, HAS_SYNCED_USER_DETAILS } from "@/lib/constants";
 
 
 const Register = () => {
@@ -36,6 +38,9 @@ const Register = () => {
     try {
       // Creating user account
       userWallet.init();
+
+      // Set user synced to false
+      await SecureStore.setItemAsync(HAS_SYNCED_USER_DETAILS, FALSE);
 
       // Create the user on Clerk
       let user = await signUp.create({
