@@ -11,6 +11,8 @@ import React from "react";
 import PasscodeKeypad from "@/components/PasscodeKeypad";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import testSendTransaction from "@/lib/test-transaction";
+import userWallet from "@/lib/userWallet";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -111,6 +113,7 @@ export default function HomeScreen() {
     } else if (biometricSetupDone) {
       await promptForBiometricAuth();
     }
+    await userWallet.init();
   };
 
   const renderCircles = (length: number) => {
@@ -147,7 +150,13 @@ export default function HomeScreen() {
       <View style={styles.line} />
 
       <ParallaxScrollView>
-        <RequestCard payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024" requestID="1" />
+
+        <RequestCard payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024"/>
+
+        <Pressable onPress={testSendTransaction}>
+            <Ionicons name="notifications-outline" size={24} color={"white"} />
+        </Pressable>
+
       </ParallaxScrollView>
 
       {showPasscodePrompt && (
