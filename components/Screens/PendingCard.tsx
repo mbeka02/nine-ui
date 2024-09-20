@@ -3,7 +3,19 @@ import { ThemedText } from "../ThemedText";
 import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
 
-export function PendingCard() {
+interface PendingCardProps {
+  amount: string;
+  payee_address: string;
+  reason: string;
+  requestedDate: string;
+}
+
+export function PendingCard({
+  amount,
+  payee_address,
+  reason,
+  requestedDate,
+}: PendingCardProps) {
   const router = useRouter();
   return (
     <TouchableOpacity
@@ -13,22 +25,12 @@ export function PendingCard() {
     >
       <View style={styles.card}>
         <View style={styles.top}>
-          <ThemedText style={{ color: "white" }}>0x0123456</ThemedText>
-          <ThemedText style={{ color: "white" }}>12th July, 2024</ThemedText>
+          <ThemedText style={{ color: "white" }}>{payee_address}</ThemedText>
+          <ThemedText style={{ color: "white" }}>{requestedDate}</ThemedText>
         </View>
         <View style={styles.bottom}>
-          <ThemedText style={{ color: "white" }}>Jumia...</ThemedText>
-          <ThemedText style={{ color: "#9EDA6F" }}>0.458 APT</ThemedText>
-        </View>
-      </View>
-      <View style={styles.card}>
-        <View style={styles.top}>
-          <ThemedText style={{ color: "white" }}>0x0123456</ThemedText>
-          <ThemedText style={{ color: "white" }}>12th July, 2024</ThemedText>
-        </View>
-        <View style={styles.bottom}>
-          <ThemedText style={{ color: "white" }}>Jumia...</ThemedText>
-          <ThemedText style={{ color: "#9EDA6F" }}>0.458 APT</ThemedText>
+          <ThemedText style={{ color: "white" }}>{reason}</ThemedText>
+          <ThemedText style={{ color: "#9EDA6F" }}>{amount} APT</ThemedText>
         </View>
       </View>
     </TouchableOpacity>

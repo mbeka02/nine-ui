@@ -28,7 +28,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="pending"
         options={{
-          title: "History",
+          title: "Pending",
         }}
       />
       <Tabs.Screen
