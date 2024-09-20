@@ -150,11 +150,13 @@ export default function HomeScreen() {
       <View style={styles.line} />
 
       <ParallaxScrollView>
+
         <RequestCard payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024"/>
 
         <Pressable onPress={testSendTransaction}>
             <Ionicons name="notifications-outline" size={24} color={"white"} />
         </Pressable>
+
       </ParallaxScrollView>
 
       {showPasscodePrompt && (
