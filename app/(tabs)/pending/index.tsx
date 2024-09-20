@@ -24,7 +24,7 @@ export default function PendingScreen() {
         <ThemedText type="title">Pending Requests</ThemedText>
       </ThemedView>
       <Text className="hidden last:flex w-full m-auto text-white font-semibold  text-lg  ">
-        no pending requests at the moment
+        No pending requests at the moment
       </Text>
       {pendingRequests.map((request) => (
         <PendingCard
