@@ -6,6 +6,11 @@ import { Stack } from "expo-router";
 import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
 import { FormInput } from "@/components/form/FormInput";
 import { FormButton } from "@/components/form/FormButton";
+import userWallet from "@/lib/userWallet";
+import * as SecureStore from "expo-secure-store";
+import { FALSE, HAS_SYNCED_USER_DETAILS } from "@/lib/constants";
+
+
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
 
@@ -31,8 +36,14 @@ const Register = () => {
     setLoading(true);
 
     try {
+      // Creating user account
+      userWallet.init();
+
+      // Set user synced to false
+      await SecureStore.setItemAsync(HAS_SYNCED_USER_DETAILS, FALSE);
+
       // Create the user on Clerk
-      await signUp.create({
+      let user = await signUp.create({
         emailAddress: form.emailAddress,
         password: form.password,
         username: form.username,
@@ -40,12 +51,14 @@ const Register = () => {
 
       // Send verification Email
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
       // change the UI to verify the email address
       setPendingVerification(true);
+
+      
     } catch (err: any) {
-      console.log(err.errors);
-      alert(err.errors[0].message);
+      // console.log(err.errors);
+      console.log(err);
+      // alert(err.errors[0].message);
     } finally {
       setLoading(false);
     }
@@ -88,7 +101,7 @@ const Register = () => {
             value={form.username}
             className="mt-12"
             handleChangeText={(
-              e: NativeSyntheticEvent<TextInputChangeEventData>,
+              e: NativeSyntheticEvent<TextInputChangeEventData>
             ) => setForm({ ...form, username: e.nativeEvent.text })}
           />
 
@@ -98,7 +111,7 @@ const Register = () => {
             value={form.emailAddress}
             className="mt-12"
             handleChangeText={(
-              e: NativeSyntheticEvent<TextInputChangeEventData>,
+              e: NativeSyntheticEvent<TextInputChangeEventData>
             ) => setForm({ ...form, emailAddress: e.nativeEvent.text })}
             props={{ autoCapitalize: "none" }}
           />
@@ -109,7 +122,7 @@ const Register = () => {
             value={form.password}
             className="mt-12"
             handleChangeText={(
-              e: NativeSyntheticEvent<TextInputChangeEventData>,
+              e: NativeSyntheticEvent<TextInputChangeEventData>
             ) => setForm({ ...form, password: e.nativeEvent.text })}
           />
           <FormButton
@@ -130,7 +143,7 @@ const Register = () => {
               value={code}
               className="mt-12"
               handleChangeText={(
-                e: NativeSyntheticEvent<TextInputChangeEventData>,
+                e: NativeSyntheticEvent<TextInputChangeEventData>
               ) => setCode(e.nativeEvent.text)}
               props={{ autoCapitalize: "none" }}
             />

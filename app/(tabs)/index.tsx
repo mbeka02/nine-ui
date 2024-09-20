@@ -9,6 +9,12 @@ import React from "react";
 import PasscodeKeypad from "@/components/PasscodeKeypad";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import testSendTransaction from "@/lib/test-transaction";
+import userWallet from "@/lib/userWallet";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
+import { getClerkInstance } from "@clerk/clerk-expo";
+import { FALSE, HAS_SYNCED_USER_DETAILS, TRUE } from "@/lib/constants";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -109,6 +115,42 @@ export default function HomeScreen() {
     } else if (biometricSetupDone) {
       await promptForBiometricAuth();
     }
+    await userWallet.init();
+    const hasUserSynced = await SecureStore.getItemAsync(HAS_SYNCED_USER_DETAILS);
+
+    if (hasUserSynced === FALSE) {
+      // Sync details to backend
+      // Getting push token
+      const token = await Notifications.getExpoPushTokenAsync({
+        projectId: Constants.expoConfig?.extra?.eas.projectId,
+      });
+
+      // Getting session token to authenticate request to server
+      const clerkInstance = getClerkInstance({
+        publishableKey: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!,
+      });
+      const sessionToken = await clerkInstance.session?.getToken();
+
+      // Sending push token and user wallet address
+      await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/initialize`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${sessionToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          expoToken: token.data,
+          address: userWallet.account?.pubKey()["hexString"],
+        }),
+      });
+
+      await SecureStore.setItemAsync(HAS_SYNCED_USER_DETAILS, TRUE);
+    } else {
+      console.log("Already Synced");
+    }
+
+
+    console.log("Done");
   };
 
   const renderCircles = (length: number) => {
@@ -145,12 +187,15 @@ export default function HomeScreen() {
       <View style={styles.line} />
 
       <ParallaxScrollView>
-        <RequestCard
-          payeeAddress="0x0123456"
-          amount={0.458}
-          reason="Jumia..."
-          date="12th July 2024"
-        />
+
+
+        <RequestCard payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024" />
+
+        <Pressable onPress={testSendTransaction}>
+          <Ionicons name="notifications-outline" size={24} color={"white"} />
+        </Pressable>
+
+
       </ParallaxScrollView>
 
       {showPasscodePrompt && (

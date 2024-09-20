@@ -1,8 +1,5 @@
-import '../global'
-import {
-  DarkTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import "../global";
+import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -21,7 +18,7 @@ const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
 if (!publishableKey) {
   throw new Error(
-    "Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env",
+    "Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env"
   );
 }
 
@@ -39,7 +36,7 @@ const InitialLayout = () => {
       const biometricSetupDone = await isBiometricSetup();
       const passcodeSetupDone = await SecureStore.getItemAsync("userPasscode");
 
-      console.log('Biometric Setup Done:', biometricSetupDone); // Debugging line
+      console.log("Biometric Setup Done:", biometricSetupDone); // Debugging line
 
       if (isSignedIn) {
         if (!biometricSetupDone && !passcodeSetupDone) {
@@ -58,8 +55,8 @@ const InitialLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="home" options={{ headerShown: false }} />
+      <Stack.Screen name="(public)" options={{ headerShown: false }} />
+
       <Stack.Screen name="biometric-setup" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
@@ -108,7 +105,6 @@ export default function RootLayout() {
   }
 
   return (
-    
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
       <ClerkLoaded>
         <ThemeProvider value={DarkTheme}>
