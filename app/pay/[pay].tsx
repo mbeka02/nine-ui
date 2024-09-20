@@ -3,6 +3,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import petra from "@/components/wallet/petra";
+
 import "../../global";
 
 export default function Pay() {
@@ -66,4 +67,5 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: "black",
   },
+
 });
