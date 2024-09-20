@@ -1,8 +1,6 @@
 import { View, Text, TextInput, Alert, StyleSheet, Image } from "react-native";
 import { useEffect, useState } from "react";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { RequestCard } from "@/components/Screens/RequestCard";
 import * as SecureStore from "expo-secure-store";
 import * as LocalAuthentication from "expo-local-authentication";
@@ -190,11 +188,13 @@ export default function HomeScreen() {
 
       <ParallaxScrollView>
 
+
         <RequestCard payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024" />
 
         <Pressable onPress={testSendTransaction}>
           <Ionicons name="notifications-outline" size={24} color={"white"} />
         </Pressable>
+
 
       </ParallaxScrollView>
 
