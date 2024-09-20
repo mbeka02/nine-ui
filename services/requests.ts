@@ -11,7 +11,5 @@ export const getPendingRequests = async (): Promise<GetRequestData[]> => {
     `${process.env.EXPO_PUBLIC_BACKEND_URL}/request`
   );
   const data = await response.json();
-  console.log("response=>", response);
-  console.log("incoming data=>", data);
   return data;
 };
