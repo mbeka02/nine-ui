@@ -9,11 +9,8 @@ import { FormButton } from "@/components/form/FormButton";
 import userWallet from "@/lib/userWallet";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
-import { useAuth } from "@clerk/clerk-expo";
-
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
-  const {getToken} = useAuth();
 
   const [form, setForm] = useState({
     emailAddress: "",
@@ -38,7 +35,7 @@ const Register = () => {
 
     try {
       // Creating user account
-      userWallet.init()
+      userWallet.init();
 
       // Create the user on Clerk
       let user = await signUp.create({
@@ -56,9 +53,11 @@ const Register = () => {
       // change the UI to verify the email address
       setPendingVerification(true);
 
-      const clerkInstance = getClerkInstance({ publishableKey: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY })
+      const clerkInstance = getClerkInstance({
+        publishableKey: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!,
+      });
       const sessionToken = await clerkInstance.session?.getToken();
-      console.log("Anthony Bust => ", sessionToken)
+      console.log("Roman sucks => ", sessionToken);
 
       await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/initialize`, {
         method: "POST",
@@ -66,10 +65,10 @@ const Register = () => {
           Authorization: `Bearer ${sessionToken}`,
         },
         body: JSON.stringify({
-            expoToken: token.data,
-            address: userWallet.account?.pubKey()['hexString'],
-        })
-      }); 
+          expoToken: token.data,
+          address: userWallet.account?.pubKey()["hexString"],
+        }),
+      });
       console.log("Done");
     } catch (err: any) {
       // console.log(err.errors);
@@ -117,7 +116,7 @@ const Register = () => {
             value={form.username}
             className="mt-12"
             handleChangeText={(
-              e: NativeSyntheticEvent<TextInputChangeEventData>,
+              e: NativeSyntheticEvent<TextInputChangeEventData>
             ) => setForm({ ...form, username: e.nativeEvent.text })}
           />
 
@@ -127,7 +126,7 @@ const Register = () => {
             value={form.emailAddress}
             className="mt-12"
             handleChangeText={(
-              e: NativeSyntheticEvent<TextInputChangeEventData>,
+              e: NativeSyntheticEvent<TextInputChangeEventData>
             ) => setForm({ ...form, emailAddress: e.nativeEvent.text })}
             props={{ autoCapitalize: "none" }}
           />
@@ -138,7 +137,7 @@ const Register = () => {
             value={form.password}
             className="mt-12"
             handleChangeText={(
-              e: NativeSyntheticEvent<TextInputChangeEventData>,
+              e: NativeSyntheticEvent<TextInputChangeEventData>
             ) => setForm({ ...form, password: e.nativeEvent.text })}
           />
           <FormButton
@@ -159,7 +158,7 @@ const Register = () => {
               value={code}
               className="mt-12"
               handleChangeText={(
-                e: NativeSyntheticEvent<TextInputChangeEventData>,
+                e: NativeSyntheticEvent<TextInputChangeEventData>
               ) => setCode(e.nativeEvent.text)}
               props={{ autoCapitalize: "none" }}
             />
