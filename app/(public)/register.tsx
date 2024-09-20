@@ -7,8 +7,8 @@ import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
 import { FormInput } from "@/components/form/FormInput";
 import { FormButton } from "@/components/form/FormButton";
 import userWallet from "@/lib/userWallet";
-import * as Notifications from "expo-notifications";
-import Constants from "expo-constants";
+
+
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
 
@@ -44,32 +44,12 @@ const Register = () => {
         username: form.username,
       });
 
-      const token = await Notifications.getExpoPushTokenAsync({
-        projectId: Constants.expoConfig?.extra?.eas.projectId,
-      });
-
       // Send verification Email
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       // change the UI to verify the email address
       setPendingVerification(true);
 
-      const clerkInstance = getClerkInstance({
-        publishableKey: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!,
-      });
-      const sessionToken = await clerkInstance.session?.getToken();
-      console.log("Roman sucks => ", sessionToken);
-
-      await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/initialize`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${sessionToken}`,
-        },
-        body: JSON.stringify({
-          expoToken: token.data,
-          address: userWallet.account?.pubKey()["hexString"],
-        }),
-      });
-      console.log("Done");
+      
     } catch (err: any) {
       // console.log(err.errors);
       console.log(err);

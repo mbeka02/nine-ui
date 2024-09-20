@@ -13,6 +13,9 @@ import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import testSendTransaction from "@/lib/test-transaction";
 import userWallet from "@/lib/userWallet";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
+import { getClerkInstance } from "@clerk/clerk-expo";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -114,6 +117,33 @@ export default function HomeScreen() {
       await promptForBiometricAuth();
     }
     await userWallet.init();
+
+    // Sync details to backend
+
+    // Getting push token
+    const token = await Notifications.getExpoPushTokenAsync({
+      projectId: Constants.expoConfig?.extra?.eas.projectId,
+    });
+
+    // Getting session token to authenticate request to server
+    const clerkInstance = getClerkInstance({
+      publishableKey: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!,
+    });
+    const sessionToken = await clerkInstance.session?.getToken();
+    console.log("Roman sucks => ", sessionToken);
+
+    // Sending push token and user wallet address
+    await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/initialize`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${sessionToken}`,
+      },
+      body: JSON.stringify({
+        expoToken: token.data,
+        address: userWallet.account?.pubKey()["hexString"],
+      }),
+    });
+    console.log("Done");
   };
 
   const renderCircles = (length: number) => {
