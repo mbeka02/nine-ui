@@ -5,27 +5,39 @@ import { TouchableOpacity } from "react-native";
 
 interface PendingCardProps {
   amount: string;
-  payee_address: string;
+  payeeAddress: string;
   reason: string;
   requestedDate: string;
+  requestID: string;
 }
 
 export function PendingCard({
   amount,
-  payee_address,
+  payeeAddress,
   reason,
   requestedDate,
+  requestID,
 }: PendingCardProps) {
   const router = useRouter();
   return (
     <TouchableOpacity
       onPress={() =>
-        router.push({ pathname: "/pay/[pay]", params: { pay: "1" } })
+        router.push({
+          pathname: "/pay/[pay]",
+          params: {
+            payeeAddress: payeeAddress,
+            amount: amount,
+            requestID: requestID,
+            reason: reason,
+            requestedDate: requestedDate,
+            pay: requestID,
+          },
+        })
       }
     >
       <View style={styles.card}>
         <View style={styles.top}>
-          <ThemedText style={{ color: "white" }}>{payee_address}</ThemedText>
+          <ThemedText style={{ color: "white" }}>{payeeAddress}</ThemedText>
           <ThemedText style={{ color: "white" }}>{requestedDate}</ThemedText>
         </View>
         <View style={styles.bottom}>

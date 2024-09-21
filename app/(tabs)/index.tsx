@@ -116,7 +116,9 @@ export default function HomeScreen() {
       await promptForBiometricAuth();
     }
     await userWallet.init();
-    const hasUserSynced = await SecureStore.getItemAsync(HAS_SYNCED_USER_DETAILS);
+    const hasUserSynced = await SecureStore.getItemAsync(
+      HAS_SYNCED_USER_DETAILS
+    );
 
     if (hasUserSynced === FALSE) {
       // Sync details to backend
@@ -136,7 +138,7 @@ export default function HomeScreen() {
         method: "POST",
         headers: {
           Authorization: `Bearer ${sessionToken}`,
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           expoToken: token.data,
@@ -148,7 +150,6 @@ export default function HomeScreen() {
     } else {
       console.log("Already Synced");
     }
-
 
     console.log("Done");
   };
@@ -187,15 +188,17 @@ export default function HomeScreen() {
       <View style={styles.line} />
 
       <ParallaxScrollView>
-
-
-        <RequestCard payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024" />
+        <RequestCard
+          requestID="23329"
+          payeeAddress="0x0123456"
+          amount={0.458}
+          reason="Jumia..."
+          date="12th July 2024"
+        />
 
         <Pressable onPress={testSendTransaction}>
           <Ionicons name="notifications-outline" size={24} color={"white"} />
         </Pressable>
-
-
       </ParallaxScrollView>
 
       {showPasscodePrompt && (
