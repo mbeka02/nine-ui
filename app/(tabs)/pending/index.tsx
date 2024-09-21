@@ -30,9 +30,10 @@ export default function PendingScreen() {
         <PendingCard
           key={request.requestID}
           amount={request.amount}
-          payee_address={request.payee_address}
+          payeeAddress={request.payee_address}
           reason={request.reason}
           requestedDate={request.requestedDate}
+          requestID={request.requestID}
         />
       ))}
     </ParallaxScrollView>

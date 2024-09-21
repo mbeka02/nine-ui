@@ -5,23 +5,41 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 
 import "../../global";
 import makePayment from "@/lib/make-payment";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 
 export default function Pay() {
+  const { amount, requestID, requestedDate, payeeAddress, reason } =
+    useLocalSearchParams();
+  const navigation = useNavigation();
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Pay Request</ThemedText>
       </ThemedView>
       <View>
-        <ThemedText>0x0123456...</ThemedText>
-        <ThemedText>Reason: Jumia....</ThemedText>
-        <ThemedText>Amount: 5APT</ThemedText>
+        <ThemedText>{payeeAddress}</ThemedText>
+        <ThemedText>Reason: {reason}</ThemedText>
+        <ThemedText>Amount: {amount}</ThemedText>
       </View>
       <View style={styles.buttons}>
-        <Pressable style={styles.button} onPress={() => { }}>
+        <Pressable
+          style={styles.button}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
           <Text style={styles.text}>Cancel</Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={() => makePayment(1, "0xce4b4fd35d341391d50c332c2b8aeab3b2aa8b14243d13095be3ce2ef7d47e8d", "TestID")}>
+        <Pressable
+          style={styles.button}
+          onPress={() =>
+            makePayment(
+              1,
+              "0xce4b4fd35d341391d50c332c2b8aeab3b2aa8b14243d13095be3ce2ef7d47e8d",
+              "TestID"
+            )
+          }
+        >
           <Text style={styles.text}> Pay</Text>
         </Pressable>
       </View>
@@ -56,5 +74,4 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: "black",
   },
-
 });

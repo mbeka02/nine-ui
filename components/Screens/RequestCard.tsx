@@ -1,6 +1,13 @@
-import { View, Text, StyleSheet, Alert, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { ThemedText } from "../ThemedText";
-import {Link, router} from "expo-router";
+import { Link, router, useRouter } from "expo-router";
 
 type Props = {
   payeeAddress: string;
@@ -11,28 +18,36 @@ type Props = {
 };
 
 export function RequestCard(args: Props) {
+  const router = useRouter();
   return (
-    <Link push href={{
-        pathname: "/pay",
-        params: {
-          payee_address: args.payeeAddress,
-          amount: args.amount.toString(),
-          requestID: args.requestID,
-          reason: args.reason,
-          requestedDate: args.date 
-        }
-        }}>
-        <View style={styles.card}>
-            <View style={styles.top}>
-                <ThemedText style={{ color: "white" }}>{args.payeeAddress}</ThemedText>
-                <ThemedText style={{ color: "white" }}>{args.date}</ThemedText>
-            </View>
-            <View style={styles.bottom}>
-                <ThemedText style={{ color: "white" }}>{args.reason}</ThemedText>
-                <ThemedText style={styles.amount}>{`${args.amount} APT`}</ThemedText>
-            </View>
+    <TouchableOpacity
+      onPress={() => {
+        router.push({
+          pathname: `/pay/[pay]`,
+          params: {
+            payeeAddress: args.payeeAddress,
+            amount: args.amount.toString(),
+            requestID: args.requestID,
+            reason: args.reason,
+            requestedDate: args.date,
+            pay: args.requestID,
+          },
+        });
+      }}
+    >
+      <View style={styles.card}>
+        <View style={styles.top}>
+          <ThemedText style={{ color: "white" }}>
+            {args.payeeAddress}
+          </ThemedText>
+          <ThemedText style={{ color: "white" }}>{args.date}</ThemedText>
         </View>
-    </Link> 
+        <View style={styles.bottom}>
+          <ThemedText style={{ color: "white" }}>{args.reason}</ThemedText>
+          <ThemedText style={styles.amount}>{`${args.amount} APT`}</ThemedText>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({
@@ -59,7 +74,6 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOpacity: 0.1,
     borderWidth: 1,
-    
 
     // opacity: 0.5
   },
