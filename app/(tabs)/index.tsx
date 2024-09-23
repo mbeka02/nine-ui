@@ -123,6 +123,7 @@ export default function HomeScreen() {
     if (hasUserSynced === FALSE) {
       // Sync details to backend
       // Getting push token
+      console.log("Syncing user details");
       const token = await Notifications.getExpoPushTokenAsync({
         projectId: Constants.expoConfig?.extra?.eas.projectId,
       });
