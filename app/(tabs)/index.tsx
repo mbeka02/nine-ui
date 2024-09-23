@@ -134,6 +134,10 @@ export default function HomeScreen() {
       const sessionToken = await clerkInstance.session?.getToken();
 
       // Sending push token and user wallet address
+      console.log("Sync Details => ", {
+          expoToken: token.data,
+          address: userWallet.account?.address()["hexString"],
+        });
       await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/initialize`, {
         method: "POST",
         headers: {
@@ -142,13 +146,13 @@ export default function HomeScreen() {
         },
         body: JSON.stringify({
           expoToken: token.data,
-          address: userWallet.account?.pubKey()["hexString"],
+          address: userWallet.account?.address()["hexString"],
         }),
       });
 
       await SecureStore.setItemAsync(HAS_SYNCED_USER_DETAILS, TRUE);
     } else {
-      console.log("Already Synced");
+      console.log("Already Synced", hasUserSynced);
     }
 
     console.log("Done");

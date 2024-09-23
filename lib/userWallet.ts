@@ -2,7 +2,7 @@ import 'react-native-get-random-values';
 import {AptosAccount, HexString} from "aptos";
 import {Account, Ed25519PrivateKey} from "@aptos-labs/ts-sdk";
 import * as SecureStore from "expo-secure-store";
-import { DERIVATION_PATH, USERS_PRIVATE_KEY, USER_ACCOUNT_MNEMONIC } from "./constants";
+import { DERIVATION_PATH, FALSE, HAS_SYNCED_USER_DETAILS, USERS_PRIVATE_KEY, USER_ACCOUNT_MNEMONIC } from "./constants";
 import * as bip39 from "bip39";
 import {aptos} from "./aptos";
 
@@ -24,6 +24,7 @@ class UserWallet {
 
             const mnemonic = bip39.generateMnemonic();
             await SecureStore.setItemAsync(USER_ACCOUNT_MNEMONIC, mnemonic);
+            await SecureStore.setItemAsync(HAS_SYNCED_USER_DETAILS, FALSE);
             return mnemonic;
         } catch(err) {
             console.log(err, "Could Not Get Mnemonic");
