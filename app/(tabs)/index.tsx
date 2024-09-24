@@ -23,6 +23,7 @@ export default function HomeScreen() {
   const [passcode, setPasscode] = useState("");
   const [showPasscodePrompt, setShowPasscodePrompt] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [confirmPasscode, setConfirmPasscode] = useState("");
 
   const promptForPasscodeAuth = async () => {
     const savedPasscode = await SecureStore.getItemAsync("userPasscode");
@@ -189,7 +190,7 @@ export default function HomeScreen() {
       <ParallaxScrollView>
 
 
-        <RequestCard payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024" />
+        <RequestCard requestID="unique-request-id" payeeAddress="0x0123456" amount={0.458} reason="Jumia..." date="12th July 2024" />
 
         <Pressable onPress={testSendTransaction}>
           <Ionicons name="notifications-outline" size={24} color={"white"} />

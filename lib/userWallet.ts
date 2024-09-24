@@ -36,7 +36,7 @@ class UserWallet {
         try {
             let pk = await SecureStore.getItemAsync(USERS_PRIVATE_KEY)
             if(pk) {
-                console.log("Account Already Created", pk);
+                console.log("Account Already Created, PKey: ", pk);
 
                 // Load the needed variables to class
                 this.privateKey = pk;

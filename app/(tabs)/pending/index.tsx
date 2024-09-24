@@ -1,3 +1,4 @@
+import React from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { PendingCard } from "@/components/Screens/PendingCard";
 
