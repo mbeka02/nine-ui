@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(158, 218, 111, 0.5)",
     position: "absolute",
-    bottom: 95,
+    bottom: 115,
     left: 0,
     right: 0,
     paddingVertical: 10,
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   button2: {
     backgroundColor: "white",
     position: "absolute",
-    bottom: 41,
+    bottom: 45,
     left: 0,
     right: 0,
     paddingVertical: 10,
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   button3: {
     backgroundColor: "#9EDA6F",
     position: "absolute",
-    bottom: 150,
+    bottom: 185,
     left: 0,
     right: 0,
     paddingVertical: 10,
