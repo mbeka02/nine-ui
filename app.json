@@ -20,10 +20,11 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff",
         "permissions": [
-        "USE_BIOMETRIC",
-        "USE_FINGERPRINT"
-      ]
-      }
+          "USE_BIOMETRIC",
+          "USE_FINGERPRINT"
+        ]
+      },
+      "package": "com.mbeka02org.nineui"
     },
     "web": {
       "bundler": "metro",
