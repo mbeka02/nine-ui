@@ -68,7 +68,7 @@ const Home = () => {
           <View style={styles.slide} key={index}>
             <Image
               source={slide.image}
-              style={[styles.image, slide.image === require('@/assets/images/fingerp.png') && styles.fingerImage]}
+              style={[styles.image]}
             />
             <Text style={styles.description}>{slide.text}</Text>
           </View>
@@ -119,10 +119,7 @@ const styles = StyleSheet.create({
     height: 300,
     resizeMode: "cover",
   },
-  fingerImage: {
-    width: "80%", // Adjust the width as needed
-    resizeMode: "contain",
-  },
+ 
   description: {
     fontSize: 18,
     textAlign: "center",
