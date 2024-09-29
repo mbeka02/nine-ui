@@ -1,15 +1,21 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+} from "react-native";
 import { PendingCard } from "@/components/Screens/PendingCard";
 
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { usePendingRequests } from "@/hooks/usePendingRequests";
-
 export default function PendingScreen() {
-  const { pendingRequests, loading, error } = usePendingRequests();
+  const { pendingRequests, refetchData, loading, error } = usePendingRequests();
   if (error) {
-    return <Text className="text-red-200">{error}</Text>;
+    return (
+      <Text className="text-red-200 m-auto text-lg font-semibold">{error}</Text>
+    );
   }
 
   if (loading) {
@@ -19,7 +25,17 @@ export default function PendingScreen() {
   }
 
   return (
-    <ParallaxScrollView>
+    <ScrollView
+      className="mx-6 my-12"
+      refreshControl={
+        <RefreshControl
+          onRefresh={refetchData}
+          refreshing={loading}
+          colors={["#9EDA6F"]}
+          progressBackgroundColor="#202020"
+        />
+      }
+    >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Pending Requests</ThemedText>
       </ThemedView>
@@ -36,7 +52,7 @@ export default function PendingScreen() {
           requestID={request.requestID}
         />
       ))}
-    </ParallaxScrollView>
+    </ScrollView>
   );
 }
 

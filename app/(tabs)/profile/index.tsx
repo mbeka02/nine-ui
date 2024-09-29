@@ -92,7 +92,7 @@ export default function ProfileScreen() {
           className="h-8 w-8 flex bg-white rounded-full  justify-center items-center absolute bottom-0 -right-2 "
           onPress={onPickImage}
         >
-          <Feather name="edit" size={20} />
+          <Feather name="edit-2" size={20} />
         </Pressable>
       </View>
       <FormInput

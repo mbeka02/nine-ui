@@ -54,7 +54,7 @@ importers:
         specifier: ^3.6.7
         version: 3.7.3
       expo:
-        specifier: ^51.0.31
+        specifier: ^51.0.32
         version: 51.0.32(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))
       expo-auth-session:
         specifier: ^5.5.2

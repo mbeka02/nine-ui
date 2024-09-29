@@ -2,6 +2,7 @@ import { View, StyleSheet } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
+import { truncateWalletAddress } from "@/utilities";
 
 interface PendingCardProps {
   amount: string;
@@ -37,7 +38,9 @@ export function PendingCard({
     >
       <View style={styles.card}>
         <View style={styles.top}>
-          <ThemedText style={{ color: "white" }}>{payeeAddress}</ThemedText>
+          <ThemedText style={{ color: "white" }}>
+            {truncateWalletAddress(payeeAddress)}
+          </ThemedText>
           <ThemedText style={{ color: "white" }}>{requestedDate}</ThemedText>
         </View>
         <View style={styles.bottom}>
@@ -77,6 +80,6 @@ const styles = StyleSheet.create({
   },
   amount: {
     color: "#9EDA6F",
-    fontWeight: "600",
+    fontWeight: "black",
   },
 });
