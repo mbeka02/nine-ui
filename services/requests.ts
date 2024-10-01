@@ -7,9 +7,25 @@ export interface GetRequestData {
 }
 
 export const getPendingRequests = async (): Promise<GetRequestData[]> => {
-  const response = await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/request`
-  );
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/request`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error("something went wrong");
+  }
+};
+
+export const getAllRequests = async (): Promise<GetRequestData[]> => {
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_BACKEND_URL}/request/all`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error("something went wrong ");
+  }
 };

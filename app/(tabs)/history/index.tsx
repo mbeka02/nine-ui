@@ -5,13 +5,14 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-import { PendingCard } from "@/components/Screens/PendingCard";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { usePendingRequests } from "@/hooks/usePendingRequests";
+import { useAllRequests } from "@/hooks/useAllRequests";
+import { RequestCard } from "@/components/Screens/RequestCard";
+
 export default function HistoryScreen() {
-  const { pendingRequests, refetchData, loading, error } = usePendingRequests();
+  const { allRequests, refetchData, loading, error } = useAllRequests();
   if (error) {
     return (
       <Text className="text-red-200 m-auto text-lg font-semibold">{error}</Text>
@@ -37,19 +38,20 @@ export default function HistoryScreen() {
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Payment Request History</ThemedText>
+        <ThemedText type="title" className="mb-8">
+          Payment Request History
+        </ThemedText>
       </ThemedView>
       <Text className="hidden last:flex w-full m-auto text-white font-semibold  text-lg  ">
         No pending requests at the moment
       </Text>
-      {pendingRequests.map((request) => (
-        <PendingCard
+      {allRequests.map((request) => (
+        <RequestCard
           key={request.requestID}
           amount={request.amount}
           payeeAddress={request.payee_address}
           reason={request.reason}
           requestedDate={request.requestedDate}
-          requestID={request.requestID}
         />
       ))}
     </ScrollView>
