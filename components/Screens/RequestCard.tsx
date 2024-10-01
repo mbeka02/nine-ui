@@ -1,53 +1,33 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-  Pressable,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet } from "react-native";
 import { ThemedText } from "../ThemedText";
-import { Link, router, useRouter } from "expo-router";
+import { truncateWalletAddress } from "@/utilities";
 
-type Props = {
+interface RequestCardProps {
+  amount: string;
   payeeAddress: string;
-  amount: number;
-  date: string;
-  requestID: string;
   reason: string;
-};
+  requestedDate: string;
+}
 
-export function RequestCard(args: Props) {
-  const router = useRouter();
+export function RequestCard({
+  amount,
+  payeeAddress,
+  reason,
+  requestedDate,
+}: RequestCardProps) {
   return (
-    <TouchableOpacity
-      onPress={() => {
-        router.push({
-          pathname: `/pay/[pay]`,
-          params: {
-            payeeAddress: args.payeeAddress,
-            amount: args.amount.toString(),
-            requestID: args.requestID,
-            reason: args.reason,
-            requestedDate: args.date,
-            pay: args.requestID,
-          },
-        });
-      }}
-    >
-      <View style={styles.card}>
-        <View style={styles.top}>
-          <ThemedText style={{ color: "white" }}>
-            {args.payeeAddress}
-          </ThemedText>
-          <ThemedText style={{ color: "white" }}>{args.date}</ThemedText>
-        </View>
-        <View style={styles.bottom}>
-          <ThemedText style={{ color: "white" }}>{args.reason}</ThemedText>
-          <ThemedText style={styles.amount}>{`${args.amount} APT`}</ThemedText>
-        </View>
+    <View style={styles.card}>
+      <View style={styles.top}>
+        <ThemedText style={{ color: "white" }}>
+          {truncateWalletAddress(payeeAddress)}
+        </ThemedText>
+        <ThemedText style={{ color: "white" }}>{requestedDate}</ThemedText>
       </View>
-    </TouchableOpacity>
+      <View style={styles.bottom}>
+        <ThemedText style={{ color: "white" }}>{reason}</ThemedText>
+        <ThemedText style={{ color: "#9EDA6F" }}>{amount} APT</ThemedText>
+      </View>
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -65,20 +45,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     width: "100%",
     borderRadius: 20,
-    marginBottom: 5,
-    backgroundColor: "#202020",
-    borderColor: "rgba(158, 218, 111, 0.4)",
+    marginVertical: 10,
     elevation: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
     shadowOpacity: 0.1,
     borderWidth: 1,
+    backgroundColor: "#202020",
+    borderColor: "rgba(158, 218, 111, 0.4)",
 
     // opacity: 0.5
   },
   amount: {
     color: "#9EDA6F",
-    fontWeight: "600",
+    fontWeight: "black",
   },
 });
