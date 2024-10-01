@@ -10,7 +10,7 @@ import { PendingCard } from "@/components/Screens/PendingCard";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { usePendingRequests } from "@/hooks/usePendingRequests";
-export default function PendingScreen() {
+export default function HistoryScreen() {
   const { pendingRequests, refetchData, loading, error } = usePendingRequests();
   if (error) {
     return (
@@ -37,7 +37,7 @@ export default function PendingScreen() {
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Pending Requests</ThemedText>
+        <ThemedText type="title">Payment Request History</ThemedText>
       </ThemedView>
       <Text className="hidden last:flex w-full m-auto text-white font-semibold  text-lg  ">
         No pending requests at the moment

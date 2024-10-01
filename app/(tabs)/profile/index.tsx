@@ -12,14 +12,6 @@ import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
 import { Alert } from "react-native";
 import * as expoImagePicker from "expo-image-picker";
 import "../../../global";
-async function fetchToken() {
-  const clerkInstance = getClerkInstance({
-    publishableKey: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!,
-  });
-  const sessionToken = await clerkInstance.session?.getToken();
-  console.log("Session Token => ", sessionToken);
-}
-
 export default function ProfileScreen() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [form, setForm] = useState({
@@ -72,7 +64,6 @@ export default function ProfileScreen() {
       Alert.alert("Error", "Failed to update profile picture");
     }
   };
-  fetchToken();
 
   return (
     <ParallaxScrollView>
