@@ -42,7 +42,7 @@ const InitialLayout = () => {
         if (!biometricSetupDone && !passcodeSetupDone) {
           router.replace("/biometric-setup");
         } else if (!inTabsGroup) {
-          router.replace("/");
+          router.replace("/lock-screen");
         }
       } else if (segments[0] !== "home") {
         router.replace("/home");
@@ -54,10 +54,10 @@ const InitialLayout = () => {
 
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="(public)" options={{ headerShown: false }} />
-
       <Stack.Screen name="biometric-setup" options={{ headerShown: false }} />
+      <Stack.Screen name="lock-screen" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

@@ -1,120 +1,22 @@
-import { View, Text, TextInput, Alert, StyleSheet, Image } from "react-native";
-import { useEffect, useState } from "react";
+import { View, Text, Alert, StyleSheet, Image } from "react-native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { RequestCard } from "@/components/Screens/RequestCard";
-import * as SecureStore from "expo-secure-store";
-import * as LocalAuthentication from "expo-local-authentication";
-import { useRouter } from "expo-router";
-import React from "react";
-import PasscodeKeypad from "@/components/PasscodeKeypad";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import testSendTransaction from "@/lib/test-transaction";
+import { useUser } from "@clerk/clerk-expo";
 import userWallet from "@/lib/userWallet";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { getClerkInstance } from "@clerk/clerk-expo";
 import { FALSE, HAS_SYNCED_USER_DETAILS, TRUE } from "@/lib/constants";
-
+import * as SecureStore from "expo-secure-store";
+import { useCallback, useEffect } from "react";
+import { PendingCard } from "@/components/Screens/PendingCard";
+import { usePendingRequests } from "@/hooks/usePendingRequests";
+import { ScrollView, RefreshControl, ActivityIndicator } from "react-native";
 export default function HomeScreen() {
-  const router = useRouter();
-  const [authSuccess, setAuthSuccess] = useState(false);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [passcode, setPasscode] = useState("");
-  const [showPasscodePrompt, setShowPasscodePrompt] = useState(false);
-  const [isConfirming, setIsConfirming] = useState(false);
-
-  const promptForPasscodeAuth = async () => {
-    const savedPasscode = await SecureStore.getItemAsync("userPasscode");
-
-    if (savedPasscode) {
-      setShowPasscodePrompt(true);
-    }
-  };
-
-  const handleKeyPress = (key: string) => {
-    if (passcode.length < 6) {
-      setPasscode(passcode + key);
-    }
-  };
-
-  const handleDelete = () => {
-    setPasscode(passcode.slice(0, -1));
-  };
-
-  const handlePasscodeSubmit = async () => {
-    const savedPasscode = await SecureStore.getItemAsync("userPasscode");
-
-    if (passcode === savedPasscode) {
-      setShowFeedback(true);
-      setShowPasscodePrompt(false);
-      setTimeout(() => {
-        setShowFeedback(false);
-        router.replace("/");
-      }, 900); // Delay navigation for 1 second
-    } else {
-      Alert.alert("Authentication failed", "Incorrect passcode.");
-    }
-  };
-
-  const promptForBiometricAuth = async () => {
-    const biometricSetupDone = await SecureStore.getItemAsync(
-      "biometricSetupDone"
-    );
-
-    if (biometricSetupDone) {
-      const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: "Log in with your fingerprint",
-        fallbackLabel: "Use Passcode",
-      });
-
-      if (!result.success) {
-        Alert.alert(
-          "Authentication failed",
-          "Unable to authenticate using biometrics."
-        );
-      } else {
-        // Show the success feedback
-        setShowFeedback(true);
-        setTimeout(() => {
-          setShowFeedback(false);
-          router.replace("/");
-        }, 900); // Delay navigation for 1 second
-      }
-    }
-  };
-
-  useEffect(() => {
-    const checkRemindMeLater = async () => {
-      const remindMeLater = await SecureStore.getItemAsync("remindMeLater");
-      if (remindMeLater === "true") {
-        router.replace("/");
-      }
-    };
-
-    checkRemindMeLater();
-  }, []);
-
-  const authenticateUser = async () => {
-    const firstTimeLogin = await SecureStore.getItemAsync("firstTimeLogin");
-
-    // Skip authentication if the user has just completed setup
-    if (firstTimeLogin === "true") {
-      // Reset the flag after the first successful login
-      await SecureStore.setItemAsync("firstTimeLogin", "false");
-      return;
-    }
-
-    const passcodeSetupDone = await SecureStore.getItemAsync("userPasscode");
-    const biometricSetupDone = await SecureStore.getItemAsync(
-      "biometricSetupDone"
-    );
-
-    if (passcodeSetupDone) {
-      await promptForPasscodeAuth();
-    } else if (biometricSetupDone) {
-      await promptForBiometricAuth();
-    }
+  const { user } = useUser();
+  const { pendingRequests, refetchData, loading, error } = usePendingRequests();
+  const handleWalletInitialization = useCallback(async () => {
     await userWallet.init();
     const hasUserSynced = await SecureStore.getItemAsync(
       HAS_SYNCED_USER_DETAILS
@@ -136,9 +38,10 @@ export default function HomeScreen() {
 
       // Sending push token and user wallet address
       console.log("Sync Details => ", {
-          expoToken: token.data,
-          address: userWallet.account?.address()["hexString"],
-        });
+        expoToken: token.data,
+        address: userWallet.account?.address()["hexString"],
+      });
+
       await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/users/initialize`, {
         method: "POST",
         headers: {
@@ -157,24 +60,60 @@ export default function HomeScreen() {
     }
 
     console.log("Done");
-  };
-
-  const renderCircles = (length: number) => {
-    return Array.from({ length: 6 }, (_, index) => (
-      <View
-        key={index}
-        style={[
-          styles.circle,
-          { backgroundColor: index < length ? "#9EDA6F" : "#808080" },
-        ]}
-      />
-    ));
-  };
-
-  useEffect(() => {
-    authenticateUser();
   }, []);
+  useEffect(() => {
+    handleWalletInitialization();
+  }, [handleWalletInitialization]);
 
+  const Content = () => {
+    if (error) {
+      return (
+        <Text className="text-red-200 m-auto text-lg font-semibold">
+          {error}
+        </Text>
+      );
+    }
+
+    if (loading) {
+      return (
+        <ActivityIndicator color="#9EDA6F" size="large" className="m-auto" />
+      );
+    }
+    return (
+      <ScrollView
+        className="mx-6 my-12"
+        refreshControl={
+          <RefreshControl
+            onRefresh={refetchData}
+            refreshing={loading}
+            colors={["#9EDA6F"]}
+            progressBackgroundColor="#202020"
+          />
+        }
+      >
+        {/* <View className="max-w-sm leading-4 tracking-wide  ">
+          <Text className="text-4xl text-white font-bold">
+            Welcome Back,
+            <Text className=" text-customGreen"> {user?.username}!</Text>
+          </Text>
+        </View>
+      */}
+        <Text className="hidden last:flex w-full m-auto text-white font-semibold  text-lg  ">
+          No pending requests at the moment
+        </Text>
+        {pendingRequests.map((request) => (
+          <PendingCard
+            key={request.requestID}
+            amount={request.amount}
+            payeeAddress={request.payee_address}
+            reason={request.reason}
+            requestedDate={request.requestedDate}
+            requestID={request.requestID}
+          />
+        ))}
+      </ScrollView>
+    );
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -194,50 +133,8 @@ export default function HomeScreen() {
       </View>
       <View style={styles.line} />
 
-      <ParallaxScrollView>
-        <RequestCard
-          requestID="23329"
-          payeeAddress="0x0123456"
-          amount={0.458}
-          reason="Jumia..."
-          date="12th July 2024"
-        />
-      </ParallaxScrollView>
+      <Content />
 
-      {showPasscodePrompt && (
-        <View style={styles.passcodeOverlay}>
-          <Image
-            source={require("@/assets/images/ninepay.png")}
-            style={styles.logo}
-          />
-          <View style={styles.circlesContainer}>
-            {renderCircles(
-              isConfirming ? confirmPasscode.length : passcode.length
-            )}
-          </View>
-          <PasscodeKeypad onKeyPress={handleKeyPress} onDelete={handleDelete} />
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              { opacity: pressed ? 0.7 : 1 },
-            ]}
-            onPress={handlePasscodeSubmit}
-          >
-            <Text style={styles.buttonText}>Submit</Text>
-          </Pressable>
-        </View>
-      )}
-
-      {showFeedback && (
-        <View style={styles.feedbackOverlay}>
-          <Image
-            source={require("@/assets/images/checkmark.png")}
-            style={styles.checkmark}
-          />
-          <Text style={styles.successText}>Authentication Successful</Text>
-        </View>
-      )}
     </View>
   );
 }
