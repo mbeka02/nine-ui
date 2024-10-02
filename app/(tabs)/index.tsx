@@ -131,11 +131,15 @@ export default function HomeScreen() {
           onPress={() => Alert.alert("Notifications clicked")}
           style={styles.notifications}
         >
-          <Ionicons name="notifications-outline" size={24} color="white" />
+           <Pressable onPress={testSendTransaction}>
+          <Ionicons name="notifications-outline" size={24} color={"white"} />
+        </Pressable>
         </Pressable>
       </View>
       <View style={styles.line} />
+
       <Content />
+
     </View>
   );
 }
