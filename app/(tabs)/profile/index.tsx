@@ -23,7 +23,6 @@ export default function ProfileScreen() {
   if (!isLoaded || !isSignedIn) {
     return null;
   }
-
   const getMnemonic = async () => {
     try {
       const mnemonic = await userWallet.getMnemonic();
@@ -49,9 +48,6 @@ export default function ProfileScreen() {
       Alert.alert("Error", "Failed to update profile");
     }
   };
-  /*const handleInputChange = (field: string) => (text: string) => {
-    setForm((prevForm) => ({ ...prevForm, [field]: text }));
-  };*/
   const onPickImage = async () => {
     try {
       let result = await expoImagePicker.launchImageLibraryAsync({
@@ -62,7 +58,6 @@ export default function ProfileScreen() {
         base64: true,
       });
       console.log(result);
-
       if (!result.canceled && result.assets[0].base64) {
         const base64 = result.assets[0].base64;
         const mimeType = result.assets[0].mimeType;
@@ -75,7 +70,6 @@ export default function ProfileScreen() {
       Alert.alert("Error", "Failed to update profile picture");
     }
   };
-
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
@@ -128,7 +122,6 @@ export default function ProfileScreen() {
     </ParallaxScrollView>
   );
 }
-
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: "row",

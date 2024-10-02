@@ -51,13 +51,13 @@ const TabBarButton = ({
         {
           //@ts-ignore
           icon[routeName]({
-            color: isFocused ? "#9EDA6F" : "white",
+            color: isFocused ? "black" : "white",
           })
         }
       </Animated.View>
       <Animated.Text
         style={[
-          { color: color, fontSize: 12, fontWeight: "600" },
+          { color: color, fontSize: 13, fontWeight: "500" },
           animatedTextStyle,
         ]}
       >
@@ -69,10 +69,11 @@ const TabBarButton = ({
 const styles = StyleSheet.create({
   tabbarItem: {
     flex: 1,
+
     justifyContent: "center",
     alignItems: "center",
-    gap: 5,
-    fontWeight: "semibold",
+    //gap: 3,
+    fontWeight: "400",
   },
 });
 export default TabBarButton;

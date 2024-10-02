@@ -13,9 +13,14 @@ import { useCallback, useEffect } from "react";
 import { PendingCard } from "@/components/Screens/PendingCard";
 import { usePendingRequests } from "@/hooks/usePendingRequests";
 import { ScrollView, RefreshControl, ActivityIndicator } from "react-native";
+import { useBottomTabBarHeight } from "@/utilities";
+//import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 export default function HomeScreen() {
   // const { user } = useUser();
   const { pendingRequests, refetchData, loading, error } = usePendingRequests();
+
+  const tabBarHeight = useBottomTabBarHeight();
+  console.log(tabBarHeight);
   const handleWalletInitialization = useCallback(async () => {
     await userWallet.init();
     const hasUserSynced = await SecureStore.getItemAsync(
@@ -115,7 +120,7 @@ export default function HomeScreen() {
     );
   };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { marginBottom: tabBarHeight }]}>
       <View style={styles.header}>
         <Image
           source={require("@/assets/images/ninepay.png")}

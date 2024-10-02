@@ -5,6 +5,7 @@ import {
   StyleSheet,
   LayoutChangeEvent,
   Pressable,
+  Keyboard,
 } from "react-native";
 import TabBarButton from "./TabBarButton";
 import { useAuth } from "@clerk/clerk-expo";
@@ -16,18 +17,19 @@ import Animated, {
 } from "react-native-reanimated";
 import { Modal } from "./Modal";
 import * as SecureStore from "expo-secure-store";
-
+import { useEffect } from "react";
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { signOut } = useAuth();
-  //const [dimensions, setDimensions] = useState({ height: 20, width: 20 });
+  const [dimensions, setDimensions] = useState({ height: 20, width: 20 });
   const [isOpen, setIsOpen] = useState(false);
+  const [keyboardStatus, setKeyboardStatus] = useState<boolean>();
 
   const doLogout = async () => {
     await SecureStore.deleteItemAsync("biometricSetupDone"); //add log to see if it is deleted
     await SecureStore.deleteItemAsync("userPasscode"); //add log to see if it is deleted
     signOut();
   };
-  /*
+
   const buttonWidth = dimensions.width / 4;
   const onTabbarLayout = (e: LayoutChangeEvent) => {
     setDimensions({
@@ -40,11 +42,25 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
     return {
       transform: [{ translateX: tabPosition.value }],
     };
-  });*/
+  });
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardStatus(true);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardStatus(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
   return (
     <>
       <Modal isOpen={isOpen}>
-        <View className=" shadow-2xl space-y-4 justify-center bg-customBackground border-customBorder border-2  rounded-3xl px-4 h-1/4 w-11/12">
+        <View className=" shadow-2xl space-y-4 justify-center bg-customBackground border-customBorder border-2  rounded-xl px-4 h-1/4 w-11/12">
           <Pressable
             onPress={doLogout}
             className=" bg-customGreen min-h-[50px] flex flex-row justify-center items-center    rounded-3xl "
@@ -63,24 +79,25 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         </View>
       </Modal>
 
-      <View /*onLayout={onTabbarLayout}*/ style={styles.tabbar}>
-        {/* <Animated.View
-          style={[
-            animatedStyle,
-            {
-              position: "absolute",
-              backgroundColor: "rgba(158, 218, 111, 0.9)",
-              borderRadius: 99,
+      <View
+        onLayout={onTabbarLayout}
+        style={[styles.tabbar, keyboardStatus ? styles.hideNavigation : null]}
+      >
+        {
+          <Animated.View
+            style={[
+              animatedStyle,
+              {
+                position: "absolute",
+                backgroundColor: "rgba(158, 218, 111, 0.9)",
+                borderRadius: 60,
 
-              //this is breaking the tab bar layout on some devices
-              //     marginHorizontal: 12,
-
-              height: dimensions.height - 2,
-              width: buttonWidth,
-            },
-          ]}
-        />
-      */}
+                height: dimensions.height,
+                width: buttonWidth,
+              },
+            ]}
+          />
+        }
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const label =
@@ -93,9 +110,9 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           const isFocused = state.index === index;
 
           const onPress = () => {
-            /*   tabPosition.value = withSpring(buttonWidth * index, {
+            tabPosition.value = withSpring(buttonWidth * index, {
               duration: 1000,
-            });*/
+            });
             const event = navigation.emit({
               type: "tabPress",
               target: route.key,
@@ -134,7 +151,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             isFocused={false}
             routeName="logout"
             color="white"
-            label="Log-out"
+            label="Logout"
           />
         }
       </View>
@@ -163,21 +180,25 @@ const styles = StyleSheet.create({
     borderColor: "rgba(158, 218, 111, 0.4)",
   },*/
   tabbar: {
-    position: "static",
-    // bottom: 0,
-    bottom: 30,
+    position: "absolute",
+    //  bottom: 0,
+    //height: 80,
+    bottom: 25,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#202020", //"#151718",
-    marginHorizontal: 20,
+    marginHorizontal: 15,
     paddingVertical: 15,
-    borderRadius: 99,
+    borderRadius: 60,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
     shadowOpacity: 0.1,
     //borderColor: "rgba(158, 218, 111, 0.4)",
     //borderWidth: 1,
+  },
+  hideNavigation: {
+    display: "none",
   },
 });
