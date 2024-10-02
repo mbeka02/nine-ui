@@ -14,7 +14,7 @@ import { PendingCard } from "@/components/Screens/PendingCard";
 import { usePendingRequests } from "@/hooks/usePendingRequests";
 import { ScrollView, RefreshControl, ActivityIndicator } from "react-native";
 export default function HomeScreen() {
-  const { user } = useUser();
+  // const { user } = useUser();
   const { pendingRequests, refetchData, loading, error } = usePendingRequests();
   const handleWalletInitialization = useCallback(async () => {
     await userWallet.init();
@@ -81,7 +81,7 @@ export default function HomeScreen() {
     }
     return (
       <ScrollView
-        className="mx-6 my-12"
+        className="mx-6  h-60 my-12"
         refreshControl={
           <RefreshControl
             onRefresh={refetchData}

@@ -28,7 +28,7 @@ const TabBarButton = ({
   useEffect(() => {
     scale.value = withSpring(
       typeof isFocused === "boolean" ? (isFocused ? 1 : 0) : isFocused,
-      { duration: 500 },
+      { duration: 500 }
     );
   }, [scale, isFocused]);
   const animatedTextStyle = useAnimatedStyle(() => {
@@ -51,7 +51,7 @@ const TabBarButton = ({
         {
           //@ts-ignore
           icon[routeName]({
-            color: isFocused ? "black" : "white",
+            color: isFocused ? "#9EDA6F" : "white",
           })
         }
       </Animated.View>

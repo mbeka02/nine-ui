@@ -19,7 +19,7 @@ import * as SecureStore from "expo-secure-store";
 
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { signOut } = useAuth();
-  const [dimensions, setDimensions] = useState({ height: 20, width: 20 });
+  //const [dimensions, setDimensions] = useState({ height: 20, width: 20 });
   const [isOpen, setIsOpen] = useState(false);
 
   const doLogout = async () => {
@@ -27,6 +27,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
     await SecureStore.deleteItemAsync("userPasscode"); //add log to see if it is deleted
     signOut();
   };
+  /*
   const buttonWidth = dimensions.width / 4;
   const onTabbarLayout = (e: LayoutChangeEvent) => {
     setDimensions({
@@ -39,7 +40,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
     return {
       transform: [{ translateX: tabPosition.value }],
     };
-  });
+  });*/
   return (
     <>
       <Modal isOpen={isOpen}>
@@ -62,8 +63,8 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         </View>
       </Modal>
 
-      <View onLayout={onTabbarLayout} style={styles.tabbar}>
-        <Animated.View
+      <View /*onLayout={onTabbarLayout}*/ style={styles.tabbar}>
+        {/* <Animated.View
           style={[
             animatedStyle,
             {
@@ -74,11 +75,12 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               //this is breaking the tab bar layout on some devices
               //     marginHorizontal: 12,
 
-              height: dimensions.height - 3,
+              height: dimensions.height - 2,
               width: buttonWidth,
             },
           ]}
         />
+      */}
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const label =
@@ -91,9 +93,9 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           const isFocused = state.index === index;
 
           const onPress = () => {
-            tabPosition.value = withSpring(buttonWidth * index, {
-              duration: 1500,
-            });
+            /*   tabPosition.value = withSpring(buttonWidth * index, {
+              duration: 1000,
+            });*/
             const event = navigation.emit({
               type: "tabPress",
               target: route.key,
@@ -161,8 +163,9 @@ const styles = StyleSheet.create({
     borderColor: "rgba(158, 218, 111, 0.4)",
   },*/
   tabbar: {
-    position: "absolute",
-    bottom: 25,
+    position: "static",
+    // bottom: 0,
+    bottom: 30,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -174,7 +177,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
     shadowOpacity: 0.1,
-    borderColor: "rgba(158, 218, 111, 0.4)",
-    borderWidth: 1,
+    //borderColor: "rgba(158, 218, 111, 0.4)",
+    //borderWidth: 1,
   },
 });

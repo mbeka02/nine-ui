@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Pressable, Image, Dimensions, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Image,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import { useRouter } from "expo-router";
 
 const { width } = Dimensions.get("window");
@@ -12,23 +20,23 @@ const Home = () => {
 
   const slides = [
     {
-      image: require('@/assets/images/fingerp.png'),
-      text: '',
+      image: require("@/assets/images/fingerp.png"),
+      text: "",
     },
     {
-      image: require('@/assets/images/keyp.png'),
-      text: '',
+      image: require("@/assets/images/keyp.png"),
+      text: "",
     },
     {
-      image: require('@/assets/images/fasterp.png'),
-      text: '',
+      image: require("@/assets/images/fasterp.png"),
+      text: "",
     },
-    
   ];
 
   const startAutoSlide = () => {
     intervalRef.current = setInterval(() => {
-      const nextSlide = currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
+      const nextSlide =
+        currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
       setCurrentSlide(nextSlide);
       scrollViewRef.current?.scrollTo({ x: nextSlide * width, animated: true });
     }, 1700);
@@ -51,9 +59,12 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-        {/* Logo and Banner Area */}
+      {/* Logo and Banner Area */}
       <View style={styles.header}>
-        <Image source={require('@/assets/images/ninepay.png')} style={styles.logo} />
+        <Image
+          source={require("@/assets/images/ninepay.png")}
+          style={styles.logo}
+        />
         <Text style={styles.bannerText}>Aptos Payments Made Easy.</Text>
       </View>
       <ScrollView
@@ -68,7 +79,11 @@ const Home = () => {
           <View style={styles.slide} key={index}>
             <Image
               source={slide.image}
-              style={[styles.image, slide.image === require('@/assets/images/fingerp.png') && styles.fingerImage]}
+              style={[
+                styles.image,
+                slide.image === require("@/assets/images/fingerp.png") &&
+                styles.fingerImage,
+              ]}
             />
             <Text style={styles.description}>{slide.text}</Text>
           </View>
@@ -76,10 +91,7 @@ const Home = () => {
       </ScrollView>
 
       <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          { opacity: pressed ? 0.7 : 1 }
-        ]}
+        style={({ pressed }) => [styles.button, { opacity: pressed ? 0.7 : 1 }]}
         onPress={() => router.push("/login")}
       >
         <Text style={styles.buttonText}>Get Started</Text>
@@ -94,14 +106,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#0d0d0d",
   },
   header: {
-    alignItems: 'center', // Center items horizontally
+    alignItems: "center", // Center items horizontally
     marginTop: 100, // Adjust the margin as needed
     marginBottom: 0,
   },
   logo: {
     width: 500,
     height: 100,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginBottom: 10, // Space between logo and text
   },
   bannerText: {
@@ -137,9 +149,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingVertical: 10,
-    borderRadius: 36,
+    borderRadius: 12,
     marginHorizontal: 10,
-    
   },
   buttonText: {
     color: "#000000",

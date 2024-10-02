@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingVertical: 10,
-    borderRadius: 36,
+    borderRadius: 12,
     marginHorizontal: 10,
   },
   button2: {
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingVertical: 10,
-    borderRadius: 36,
+    borderRadius: 12,
     marginHorizontal: 10,
   },
   button3: {
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingVertical: 10,
-    borderRadius: 36,
+    borderRadius: 12,
     marginHorizontal: 10,
   },
   buttonText: {
