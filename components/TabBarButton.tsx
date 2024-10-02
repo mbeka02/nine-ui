@@ -28,7 +28,7 @@ const TabBarButton = ({
   useEffect(() => {
     scale.value = withSpring(
       typeof isFocused === "boolean" ? (isFocused ? 1 : 0) : isFocused,
-      { duration: 500 },
+      { duration: 500 }
     );
   }, [scale, isFocused]);
   const animatedTextStyle = useAnimatedStyle(() => {
@@ -57,7 +57,7 @@ const TabBarButton = ({
       </Animated.View>
       <Animated.Text
         style={[
-          { color: color, fontSize: 12, fontWeight: "600" },
+          { color: color, fontSize: 13, fontWeight: "500" },
           animatedTextStyle,
         ]}
       >
@@ -69,10 +69,11 @@ const TabBarButton = ({
 const styles = StyleSheet.create({
   tabbarItem: {
     flex: 1,
+
     justifyContent: "center",
     alignItems: "center",
-    gap: 5,
-    fontWeight: "semibold",
+    //gap: 3,
+    fontWeight: "400",
   },
 });
 export default TabBarButton;

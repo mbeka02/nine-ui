@@ -4,14 +4,14 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useUser } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
-import { getClerkInstance } from "@clerk/clerk-expo";
 import { FormButton } from "@/components/form/FormButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormInput } from "@/components/form/FormInput";
 import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
 import { Alert } from "react-native";
 import * as expoImagePicker from "expo-image-picker";
 import "../../../global";
+import userWallet from "@/lib/userWallet";
 export default function ProfileScreen() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [form, setForm] = useState({
@@ -19,11 +19,21 @@ export default function ProfileScreen() {
     lastName: user?.lastName || "",
     username: user?.username || "",
   });
-
+  const [mnemonic, setMnemonic] = useState("");
   if (!isLoaded || !isSignedIn) {
     return null;
   }
-
+  const getMnemonic = async () => {
+    try {
+      const mnemonic = await userWallet.getMnemonic();
+      setMnemonic(mnemonic);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getMnemonic();
+  }, []);
   const onSubmit = async () => {
     try {
       await user.update({
@@ -38,9 +48,6 @@ export default function ProfileScreen() {
       Alert.alert("Error", "Failed to update profile");
     }
   };
-  /*const handleInputChange = (field: string) => (text: string) => {
-    setForm((prevForm) => ({ ...prevForm, [field]: text }));
-  };*/
   const onPickImage = async () => {
     try {
       let result = await expoImagePicker.launchImageLibraryAsync({
@@ -51,7 +58,6 @@ export default function ProfileScreen() {
         base64: true,
       });
       console.log(result);
-
       if (!result.canceled && result.assets[0].base64) {
         const base64 = result.assets[0].base64;
         const mimeType = result.assets[0].mimeType;
@@ -64,7 +70,6 @@ export default function ProfileScreen() {
       Alert.alert("Error", "Failed to update profile picture");
     }
   };
-
   return (
     <ParallaxScrollView>
       <ThemedView style={styles.titleContainer}>
@@ -117,7 +122,6 @@ export default function ProfileScreen() {
     </ParallaxScrollView>
   );
 }
-
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: "row",

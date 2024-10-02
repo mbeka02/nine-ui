@@ -19,7 +19,7 @@ const FormButton = ({
     <TouchableOpacity
       onPress={handlePress}
       activeOpacity={0.7}
-      className={`bg-customGreen rounded-3xl min-h-[50px] flex flex-row justify-center items-center ${containerStyles} ${isLoading ? "opacity-50" : ""
+      className={`bg-customGreen  rounded-xl min-h-[50px] flex flex-row justify-center items-center ${containerStyles} ${isLoading ? "opacity-50" : ""
         }`}
       disabled={isLoading}
     >
