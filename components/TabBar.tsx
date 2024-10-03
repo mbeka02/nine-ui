@@ -60,23 +60,21 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   return (
     <>
       <Modal isOpen={isOpen}>
-        <View className=" shadow-2xl space-y-4 justify-center bg-customBackground border-customBorder border-2  rounded-xl px-4 h-1/4 w-11/12">
-          <Pressable
-            onPress={doLogout}
-            className=" bg-customGreen min-h-[50px] flex flex-row justify-center items-center    rounded-3xl "
-          >
-            <Text className={`text-black font-semibold text-lg `}>Log Out</Text>
-          </Pressable>
+        <Pressable
+          onPress={doLogout}
+          className=" bg-customGreen min-h-[50px] flex flex-row justify-center items-center    rounded-3xl "
+        >
+          <Text className={`text-black font-semibold text-lg `}>Log Out</Text>
+        </Pressable>
 
-          <Pressable
-            onPress={() => setIsOpen(false)}
-            className="border-solid border-2 border-customBorder min-h-[50px]  flex flex-row justify-center items-center mt-4   rounded-3xl "
-          >
-            <Text className={`text-customGreen font-semibold text-lg `}>
-              Cancel
-            </Text>
-          </Pressable>
-        </View>
+        <Pressable
+          onPress={() => setIsOpen(false)}
+          className="border-solid border-2 border-customBorder min-h-[50px]  flex flex-row justify-center items-center mt-4   rounded-3xl "
+        >
+          <Text className={`text-customGreen font-semibold text-lg `}>
+            Cancel
+          </Text>
+        </Pressable>
       </Modal>
 
       <View
