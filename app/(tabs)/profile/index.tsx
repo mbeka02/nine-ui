@@ -11,7 +11,7 @@ import {
 import { useUser } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
 import { FormButton } from "@/components/form/FormButton";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FormInput } from "@/components/form/FormInput";
 import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
 import { Alert } from "react-native";
@@ -23,31 +23,45 @@ import { Modal } from "@/components/Modal";
 export default function ProfileScreen() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [form, setForm] = useState({
-    firstName: user?.firstName || "",
-    lastName: user?.lastName || "",
-    username: user?.username || "",
+    firstName: "",
+    lastName: "",
+    username: "",
   });
   const [mnemonic, setMnemonic] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const bottomTabBarHeight = useBottomTabBarHeight();
-
-  if (!isLoaded || !isSignedIn) {
-    return null;
-  }
-
-  const getMnemonic = async () => {
+  // Initialize form with user data when available
+  useEffect(() => {
+    if (user) {
+      setForm({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        username: user.username || "",
+      });
+    }
+  }, [user]);
+  const getMnemonic = useCallback(async () => {
     try {
       const mnemonic = await userWallet.getMnemonic();
       setMnemonic(mnemonic);
     } catch (error) {
       console.log(error);
     }
-  };
-  useEffect(() => {
-    getMnemonic();
   }, []);
+  useEffect(() => {
+    if (isLoaded && isSignedIn) getMnemonic();
+  }, [isLoaded, isSignedIn, getMnemonic]);
+
+  if (!isLoaded || !isSignedIn) {
+    return null;
+  }
+
   const onSubmit = async () => {
+    //prevent multiple submissions
+    if (isUpdating) return;
     try {
+      setIsUpdating(true);
       await user.update({
         firstName: form.firstName,
         lastName: form.lastName,
@@ -58,10 +72,20 @@ export default function ProfileScreen() {
     } catch (error: any) {
       console.log(error.errors[0]);
       Alert.alert("Error", "Failed to update profile");
+    } finally {
+      setIsUpdating(false);
     }
   };
   const onPickImage = async () => {
     try {
+      const { status } =
+        await expoImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission Required",
+          "Please grant access to your media gallery"
+        );
+      }
       let result = await expoImagePicker.launchImageLibraryAsync({
         mediaTypes: expoImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
@@ -143,8 +167,9 @@ export default function ProfileScreen() {
 
         <FormButton
           containerStyles="mt-6"
-          title="Update"
+          title={isUpdating ? "Updating" : "Update"}
           handlePress={onSubmit}
+          isLoading={isUpdating}
         />
 
         <TouchableOpacity
