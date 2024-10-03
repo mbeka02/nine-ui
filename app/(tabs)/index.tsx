@@ -1,8 +1,4 @@
-import { View, Text, Alert, StyleSheet, Image } from "react-native";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { Pressable } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useUser } from "@clerk/clerk-expo";
+import { View, Text, StyleSheet, Image } from "react-native";
 import userWallet from "@/lib/userWallet";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
@@ -14,13 +10,10 @@ import { PendingCard } from "@/components/Screens/PendingCard";
 import { usePendingRequests } from "@/hooks/usePendingRequests";
 import { ScrollView, RefreshControl, ActivityIndicator } from "react-native";
 import { useBottomTabBarHeight } from "@/utilities";
-//import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 export default function HomeScreen() {
-  // const { user } = useUser();
   const { pendingRequests, refetchData, loading, error } = usePendingRequests();
 
   const tabBarHeight = useBottomTabBarHeight();
-  console.log(tabBarHeight);
   const handleWalletInitialization = useCallback(async () => {
     await userWallet.init();
     const hasUserSynced = await SecureStore.getItemAsync(
@@ -126,20 +119,10 @@ export default function HomeScreen() {
           source={require("@/assets/images/ninepay.png")}
           style={styles.logo}
         />
-
-        <Pressable
-          onPress={() => Alert.alert("Notifications clicked")}
-          style={styles.notifications}
-        >
-           <Pressable onPress={testSendTransaction}>
-          <Ionicons name="notifications-outline" size={24} color={"white"} />
-        </Pressable>
-        </Pressable>
       </View>
       <View style={styles.line} />
 
       <Content />
-
     </View>
   );
 }

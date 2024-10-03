@@ -73,6 +73,7 @@ export default function LockScreen() {
       }
     }
   };
+  /*
   useEffect(() => {
     const checkRemindMeLater = async () => {
       const remindMeLater = await SecureStore.getItemAsync("remindMeLater");
@@ -83,7 +84,7 @@ export default function LockScreen() {
 
     checkRemindMeLater();
   }, []);
-
+*/
   const authenticateUser = async () => {
     const firstTimeLogin = await SecureStore.getItemAsync("firstTimeLogin");
 
