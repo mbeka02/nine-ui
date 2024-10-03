@@ -1,84 +1,98 @@
-import 'react-native-get-random-values';
-import {AptosAccount, HexString} from "aptos";
-import {Account, Ed25519PrivateKey} from "@aptos-labs/ts-sdk";
+import "react-native-get-random-values";
+import { AptosAccount, HexString } from "aptos";
+import { Account, Ed25519PrivateKey } from "@aptos-labs/ts-sdk";
 import * as SecureStore from "expo-secure-store";
-import { DERIVATION_PATH, FALSE, HAS_SYNCED_USER_DETAILS, USERS_PRIVATE_KEY, USER_ACCOUNT_MNEMONIC } from "./constants";
+import {
+  DERIVATION_PATH,
+  FALSE,
+  HAS_SYNCED_USER_DETAILS,
+  USERS_PRIVATE_KEY,
+  USER_ACCOUNT_MNEMONIC,
+} from "./constants";
 import * as bip39 from "bip39";
-import {aptos} from "./aptos";
+import { aptos } from "./aptos";
 
 class UserWallet {
-    privateKey: string | null = null;
-    account: AptosAccount | null = null;
-    signer: Account| null = null;
+  privateKey: string | null = null;
+  account: AptosAccount | null = null;
+  signer: Account | null = null;
 
-    constructor() {}
+  constructor() { }
 
-    async getMnemonic(): Promise<string> {
-        try {   
-            const savedMnemonic = await SecureStore.getItemAsync(USER_ACCOUNT_MNEMONIC);
-            console.log("Saved Mnemonic => ", savedMnemonic)
+  async getMnemonic(): Promise<string> {
+    try {
+      const savedMnemonic = await SecureStore.getItemAsync(
+        USER_ACCOUNT_MNEMONIC
+      );
+      console.log("Saved Mnemonic => ", savedMnemonic);
 
-            if(savedMnemonic) {
-                return savedMnemonic;
-            }
+      if (savedMnemonic) {
+        return savedMnemonic;
+      }
 
-            const mnemonic = bip39.generateMnemonic();
-            await SecureStore.setItemAsync(USER_ACCOUNT_MNEMONIC, mnemonic);
-            await SecureStore.setItemAsync(HAS_SYNCED_USER_DETAILS, FALSE);
-            return mnemonic;
-        } catch(err) {
-            console.log(err, "Could Not Get Mnemonic");
-            throw "Could Not Get Mnemonic";
-        }
+      const mnemonic = bip39.generateMnemonic();
+      await SecureStore.setItemAsync(USER_ACCOUNT_MNEMONIC, mnemonic);
+      await SecureStore.setItemAsync(HAS_SYNCED_USER_DETAILS, FALSE);
+      return mnemonic;
+    } catch (err) {
+      console.log(err, "Could Not Get Mnemonic");
+      throw "Could Not Get Mnemonic";
     }
+  }
 
-    // Create an account 
-    async init() {
-        try {
-            let pk = await SecureStore.getItemAsync(USERS_PRIVATE_KEY)
-            if(pk) {
-                console.log("Account Already Created", pk);
+  // Create an account
+  async init() {
+    try {
+      let pk = await SecureStore.getItemAsync(USERS_PRIVATE_KEY);
+      if (pk) {
+        console.log("Account Already Created", pk);
 
-                // Load the needed variables to class
-                this.privateKey = pk;
-                this.account = AptosAccount.fromDerivePath(DERIVATION_PATH, (await this.getMnemonic()));
-                this.signer = this.signer = Account.fromPrivateKey({
-                    privateKey: new Ed25519PrivateKey(new HexString(this.privateKey).toUint8Array())
-                });
+        // Load the needed variables to class
+        this.privateKey = pk;
+        this.account = AptosAccount.fromDerivePath(
+          DERIVATION_PATH,
+          await this.getMnemonic()
+        );
+        this.signer = this.signer = Account.fromPrivateKey({
+          privateKey: new Ed25519PrivateKey(
+            new HexString(this.privateKey).toUint8Array()
+          ),
+        });
 
-                console.log("Acount => ", this.account.address())
+        console.log("Account => ", this.account.address());
 
-                return;
-            }
+        return;
+      }
 
-            // Generating mnemonic
-            let mnemonic = await this.getMnemonic();
-            console.log("Mnemonic => ", mnemonic);
+      // Generating mnemonic
+      let mnemonic = await this.getMnemonic();
+      console.log("Mnemonic => ", mnemonic);
 
-            // Create account from derivation path
-            let account = AptosAccount.fromDerivePath(DERIVATION_PATH, mnemonic);
-            this.account = account;
+      // Create account from derivation path
+      let account = AptosAccount.fromDerivePath(DERIVATION_PATH, mnemonic);
+      this.account = account;
 
+      // Set private key
+      this.privateKey = account.toPrivateKeyObject().privateKeyHex;
+      this.signer = Account.fromPrivateKey({
+        privateKey: new Ed25519PrivateKey(
+          new HexString(this.privateKey).toUint8Array()
+        ),
+      });
 
-            // Set private key
-            this.privateKey = account.toPrivateKeyObject().privateKeyHex;
-            this.signer = Account.fromPrivateKey({
-                privateKey: new Ed25519PrivateKey(new HexString(this.privateKey).toUint8Array())
-            });
+      // Fund account in order to create it
+      await aptos.fundAccount({
+        accountAddress: this.signer.accountAddress,
+        amount: 250000001,
+      });
 
-            // Fund account in order to create it
-            await aptos.fundAccount({
-                accountAddress: this.signer.accountAddress,
-                amount: 250000001,
-              });
-
-            console.log("Private Key => ", this.privateKey);
-            await SecureStore.setItemAsync(USERS_PRIVATE_KEY, this.privateKey);
-        } catch(err) {
-            console.log("Error initing user wallet", err);
-            throw "Error Initing User Wallet";
-        }
+      console.log("Private Key => ", this.privateKey);
+      await SecureStore.setItemAsync(USERS_PRIVATE_KEY, this.privateKey);
+    } catch (err) {
+      console.log("Error initing user wallet", err);
+      throw "Error Initing User Wallet";
     }
+  }
 }
 
 export default new UserWallet();
