@@ -3,12 +3,45 @@ import { View, Text, StyleSheet, Alert, Image, Pressable } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { setRemindMeLater } from "@/utilities";
 
 const BiometricSetup = () => {
   const router = useRouter();
   const [isSupported, setIsSupported] = useState<boolean>(false);
   const [authTypes, setAuthTypes] = useState<string[]>([]);
-
+  const handleRemindLater = async () => {
+    Alert.alert(
+      "Skip Security Setup",
+      "You can set up additional security later. Would you like to be reminded:",
+      [
+        {
+          text: "In 24 hours",
+          onPress: async () => {
+            await setRemindMeLater(24);
+            router.replace("/(tabs)");
+          },
+        },
+        {
+          text: "In 48 hours",
+          onPress: async () => {
+            await setRemindMeLater(48);
+            router.replace("/(tabs)");
+          },
+        },
+        {
+          text: "In 1 week",
+          onPress: async () => {
+            await setRemindMeLater(168); // 7 days * 24 hours
+            router.replace("/(tabs)");
+          },
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ]
+    );
+  };
   useEffect(() => {
     const checkBiometricSupport = async () => {
       const compatible = await LocalAuthentication.hasHardwareAsync();
@@ -121,7 +154,7 @@ const BiometricSetup = () => {
               styles.button2,
               { opacity: pressed ? 0.7 : 1 },
             ]}
-            onPress={() => router.replace("/")}
+            onPress={handleRemindLater}
           >
             <Text style={styles.buttonText}>Remind me later</Text>
           </Pressable>

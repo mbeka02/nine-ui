@@ -10,7 +10,7 @@ import { Pressable } from "react-native";
 export default function LockScreen() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [passcode, setPasscode] = useState("");
-  const [showPasscodePrompt, setShowPasscodePrompt] = useState(false);
+  const [showPasscodePrompt, setShowPasscodePrompt] = useState(true);
   const [isConfirming, setIsConfirming] = useState(false);
   const router = useRouter();
 
@@ -18,7 +18,9 @@ export default function LockScreen() {
     const savedPasscode = await SecureStore.getItemAsync("userPasscode");
 
     if (savedPasscode) {
-      setShowPasscodePrompt(true);
+      console.log("passcode=>", savedPasscode);
+      return;
+      //setShowPasscodePrompt(true);
     }
   };
 
@@ -94,19 +96,20 @@ export default function LockScreen() {
       await SecureStore.setItemAsync("firstTimeLogin", "false");
       return;
     }
+    const passcodeSetupComplete = await SecureStore.getItemAsync(
+      "passcodeSetupComplete"
+    );
 
-    const passcodeSetupDone = await SecureStore.getItemAsync("userPasscode");
     const biometricSetupDone = await SecureStore.getItemAsync(
       "biometricSetupDone"
     );
 
-    if (passcodeSetupDone) {
+    if (passcodeSetupComplete) {
       await promptForPasscodeAuth();
     } else if (biometricSetupDone) {
       await promptForBiometricAuth();
     }
   };
-
   const renderCircles = (length: number) => {
     return Array.from({ length: 6 }, (_, index) => (
       <View
