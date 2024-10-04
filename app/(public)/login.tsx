@@ -22,8 +22,10 @@ const Login = () => {
 
   const checkBiometricSetup = async () => {
     const isBiometricEnrolled = await LocalAuthentication.isEnrolledAsync();
-    const biometricSetupDone = await SecureStore.getItemAsync("biometricSetupDone");
-  
+    const biometricSetupDone = await SecureStore.getItemAsync(
+      "biometricSetupDone"
+    );
+
     if (!isBiometricEnrolled && !biometricSetupDone) {
       router.replace("/biometric-setup");
     } else if (biometricSetupDone) {
@@ -50,8 +52,7 @@ const Login = () => {
       await setActive({ session: completeSignIn.createdSessionId });
 
       // Load wallet details
-      await userWallet.init()
-
+      await userWallet.init();
       // Check if biometric setup is done
       await checkBiometricSetup();
     } catch (err: any) {
