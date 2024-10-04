@@ -25,8 +25,9 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const [keyboardStatus, setKeyboardStatus] = useState<boolean>();
 
   const doLogout = async () => {
-    await SecureStore.deleteItemAsync("biometricSetupDone"); //add log to see if it is deleted
-    await SecureStore.deleteItemAsync("userPasscode"); //add log to see if it is deleted
+    // DON'T DELETE THE DETAILS
+    //await SecureStore.deleteItemAsync("biometricSetupDone"); //add log to see if it is deleted
+    //await SecureStore.deleteItemAsync("userPasscode"); //add log to see if it is deleted
     signOut();
   };
 
