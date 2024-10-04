@@ -6,13 +6,32 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import "../../global";
 import makePayment from "@/lib/make-payment";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useState } from "react";
+import Spinner from "react-native-loading-spinner-overlay";
 
 export default function Pay() {
   const { amount, requestID, requestedDate, payeeAddress, reason } =
     useLocalSearchParams();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const handlePayment = async (
+    amount: number,
+    receiver: string,
+    requestID: string
+  ) => {
+    try {
+      setLoading(true);
+      await makePayment(amount, receiver, requestID);
+    } catch (error) {
+      console.log("unable to complete payment:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <ParallaxScrollView>
+      <Spinner visible={loading} />
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Pay Request</ThemedText>
       </ThemedView>
@@ -33,7 +52,7 @@ export default function Pay() {
         <Pressable
           style={styles.button}
           onPress={() =>
-            makePayment(
+            handlePayment(
               1,
               "0xce4b4fd35d341391d50c332c2b8aeab3b2aa8b14243d13095be3ce2ef7d47e8d",
               "TestID"
