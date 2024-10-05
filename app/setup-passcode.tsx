@@ -76,106 +76,7 @@
 //
 //       await storeData("userPasscode", passcode);
 //       await storeData("biometricSetupDone", "true");
-//       Alert.alert("Success", "Passcode set up successfully!");
-//       router.replace("/");
-//     } else {
-//       setIsConfirming(true);
-//       setConfirmPasscode(""); // Clear confirm passcode field
-//     }
-//   };
-//
-//   const storeData = async (key, value) => {
-//     try {
-//       await SecureStore.setItemAsync(key, value);
-//       console.log(`Data stored: ${key} = ${value}`);
-//     } catch (error) {
-//       console.error("Error storing data:", error);
-//     }
-//   };
-//
-//   const renderCircles = (length) => {
-//     return Array.from({ length: 6 }, (_, index) => (
-//       <View
-//         key={index}
-//         style={[
-//           styles.circle,
-//           { backgroundColor: index < length ? "#9EDA6F" : "#808080" },
-//         ]}
-//       />
-//     ));
-//   };
-//
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.title}>
-//         {isConfirming ? "Confirm Passcode" : "Set Up Passcode"}
-//       </Text>
-//       <View style={styles.circlesContainer}>
-//         {renderCircles(isConfirming ? confirmPasscode.length : passcode.length)}
-//       </View>
-//       <Keypad
-//         onKeyPress={isConfirming ? handleConfirmKeyPress : handleKeyPress}
-//         onDelete={handleDelete}
-//       />
-//       <Pressable
-//         style={({ pressed }) => [styles.button, { opacity: pressed ? 0.7 : 1 }]}
-//         onPress={handlePasscodeSubmit}
-//       >
-//         <Text style={styles.buttonText}>
-//           {isConfirming ? "Confirm Passcode" : "Next"}
-//         </Text>
-//       </Pressable>
-//     </View>
-//   );
-// };
-//
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     padding: 20,
-//     backgroundColor: "#000",
-//   },
-//   title: {
-//     color: "#fff",
-//     fontSize: 24,
-//     textAlign: "center",
-//     marginBottom: 20,
-//   },
-//   passcode: {
-//     color: "#fff",
-//     fontSize: 24,
-//     textAlign: "center",
-//   },
-//   circlesContainer: {
-//     flexDirection: "row",
-//     justifyContent: "center",
-//     marginBottom: 20,
-//   },
-//   circle: {
-//     width: 17,
-//     height: 17,
-//     borderRadius: 8,
-//     margin: 5,
-//     backgroundColor: "#E5E4E2",
-//   },
-//   keypadContainer: {
-//     flexDirection: "column",
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   keypadRow: {
-//     flexDirection: "row",
-//   },
-//   key: {
-//     backgroundColor: "#222",
-//     borderRadius: 10,
-//     padding: 20,
-//     margin: 5,
-//     width: 90,
-//     height: 80,
-//     alignItems: "center",
-//     justifyContent: "center",
+//       Alert.alert("Success", "Passcode set up successfully!"); router.replace("/"); } else { setIsConfirming(true); setConfirmPasscode(""); // Clear confirm passcode field } }; const storeData = async (key, value) => { try { await SecureStore.setItemAsync(key, value); console.log(`Data stored: ${key} = ${value}`); } catch (error) { console.error("Error storing data:", error); } }; const renderCircles = (length) => { return Array.from({ length: 6 }, (_, index) => ( <View key={index} style={[ styles.circle, { backgroundColor: index < length ? "#9EDA6F" : "#808080" }, ]} />)); }; return ( <View style={styles.container}> <Text style={styles.title}> {isConfirming ? "Confirm Passcode" : "Set Up Passcode"} </Text> <View style={styles.circlesContainer}> {renderCircles(isConfirming ? confirmPasscode.length : passcode.length)} </View> <Keypad onKeyPress={isConfirming ? handleConfirmKeyPress : handleKeyPress} onDelete={handleDelete} /> <Pressable style={({ pressed }) => [styles.button, { opacity: pressed ? 0.7 : 1 }]} onPress={handlePasscodeSubmit} > <Text style={styles.buttonText}> {isConfirming ? "Confirm Passcode" : "Next"} </Text> </Pressable> </View>); }; const styles = StyleSheet.create({ container: { flex: 1, justifyContent: "center", padding: 20, backgroundColor: "#000", }, title: { color: "#fff", fontSize: 24, textAlign: "center", marginBottom: 20, }, passcode: { color: "#fff", fontSize: 24, textAlign: "center", }, circlesContainer: { flexDirection: "row", justifyContent: "center", marginBottom: 20, }, circle: { width: 17, height: 17, borderRadius: 8, margin: 5, backgroundColor: "#E5E4E2", }, keypadContainer: { flexDirection: "column", justifyContent: "center", alignItems: "center", }, keypadRow: { flexDirection: "row", }, key: { backgroundColor: "#222", borderRadius: 10, padding: 20, margin: 5, width: 90, height: 80, alignItems: "center", justifyContent: "center",
 //   },
 //   keyText: {
 //     color: "#fff",
@@ -274,8 +175,6 @@ const SetupPasscode = () => {
 
   const storePasscode = async (passcode: string) => {
     try {
-      //TODO:. Hash the passcode before storing
-
       // Store the passcode
       await SecureStore.setItemAsync("userPasscode", passcode);
 

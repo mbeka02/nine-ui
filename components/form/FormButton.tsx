@@ -23,7 +23,7 @@ const FormButton = ({
         }`}
       disabled={isLoading}
     >
-      <Text className={`text-black font-semibold text-lg ${textStyles}`}>
+      <Text className={`text-black  font-semibold text-lg ${textStyles}`}>
         {title}
       </Text>
 

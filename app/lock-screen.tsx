@@ -10,17 +10,14 @@ import { Pressable } from "react-native";
 export default function LockScreen() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [passcode, setPasscode] = useState("");
-  const [showPasscodePrompt, setShowPasscodePrompt] = useState(true);
+  const [showPasscodePrompt, setShowPasscodePrompt] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const router = useRouter();
 
   const promptForPasscodeAuth = async () => {
     const savedPasscode = await SecureStore.getItemAsync("userPasscode");
-
     if (savedPasscode) {
-      console.log("passcode=>", savedPasscode);
-      return;
-      //setShowPasscodePrompt(true);
+      setShowPasscodePrompt(true);
     }
   };
 

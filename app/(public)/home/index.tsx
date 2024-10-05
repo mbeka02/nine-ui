@@ -77,12 +77,7 @@ const Home = () => {
       >
         {slides.map((slide, index) => (
           <View style={styles.slide} key={index}>
-            <Image
-              source={slide.image}
-
-              style={[styles.image]}
-
-            />
+            <Image source={slide.image} style={[styles.image]} />
             <Text style={styles.description}>{slide.text}</Text>
           </View>
         ))}
@@ -129,7 +124,7 @@ const styles = StyleSheet.create({
     height: 300,
     resizeMode: "cover",
   },
- 
+
   description: {
     fontSize: 18,
     textAlign: "center",
@@ -150,7 +145,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#000000",
     fontSize: 19,
-    fontWeight: "medium",
+    fontWeight: "600",
     textAlign: "center",
   },
 });
