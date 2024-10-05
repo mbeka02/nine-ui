@@ -9,7 +9,7 @@ import { FormButton } from "@/components/form/FormButton";
 import userWallet from "@/lib/userWallet";
 import * as SecureStore from "expo-secure-store";
 import { FALSE, HAS_SYNCED_USER_DETAILS } from "@/lib/constants";
-
+import { toast } from "sonner-native";
 
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -43,21 +43,24 @@ const Register = () => {
       await SecureStore.setItemAsync(HAS_SYNCED_USER_DETAILS, FALSE);
 
       // Create the user on Clerk
-      let user = await signUp.create({
-        emailAddress: form.emailAddress,
-        password: form.password,
-        username: form.username,
+      await signUp.create({
+        emailAddress: form.emailAddress.trim(),
+        password: form.password.trim(),
+        username: form.username.trim(),
       });
 
       // Send verification Email
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       // change the UI to verify the email address
       setPendingVerification(true);
-
-      
     } catch (err: any) {
       // console.log(err.errors);
-      console.log(err);
+      console.log(err.errors[0].message);
+      toast.error("unable to create your account", {
+        style: {
+          borderColor: "red",
+        },
+      });
       // alert(err.errors[0].message);
     } finally {
       setLoading(false);
@@ -70,7 +73,11 @@ const Register = () => {
       return;
     }
     if (!code) {
-      Alert.alert("Error", "Enter the verification code");
+      toast.error("enter the verification code", {
+        style: {
+          borderColor: "red",
+        },
+      });
     }
 
     setLoading(true);
@@ -82,7 +89,12 @@ const Register = () => {
 
       await setActive({ session: completeSignUp.createdSessionId });
     } catch (err: any) {
-      alert(err.errors[0].message);
+      console.log(err.errors[0].message);
+      toast.error("unable to complete sign up", {
+        style: {
+          borderColor: "red",
+        },
+      });
     } finally {
       setLoading(false);
     }

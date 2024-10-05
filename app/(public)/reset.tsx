@@ -1,10 +1,11 @@
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { Stack } from "expo-router";
 import { useSignIn } from "@clerk/clerk-expo";
 import { FormButton } from "@/components/form/FormButton";
 import { FormInput } from "@/components/form/FormInput";
 import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
+import { toast } from "sonner-native";
 const PwReset = () => {
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +16,11 @@ const PwReset = () => {
   // Request a password reset code by email
   const onRequestReset = async () => {
     if (!emailAddress) {
-      Alert.alert("Error", "Kindly provide your email address");
+      toast.error("kindly provide your email address", {
+        style: {
+          borderColor: "red",
+        },
+      });
       return;
     }
     try {
@@ -32,7 +37,11 @@ const PwReset = () => {
   // Reset the password with the code and the new password
   const onReset = async () => {
     if (!code || !password) {
-      Alert.alert("Error", "Fill in all the fields");
+      toast.error("fill in all the fields", {
+        style: {
+          borderColor: "red",
+        },
+      });
       return;
     }
     try {
@@ -41,14 +50,17 @@ const PwReset = () => {
         code,
         password,
       });
-      console.log(result);
-      alert("Password reset successfully");
-
+      toast.success(" the password reset was successful");
       // Set the user session active, which will log in the user automatically
       // @ts-ignore
       await setActive({ session: result?.createdSessionId });
     } catch (err: any) {
-      alert(err.errors[0].message);
+      // alert(err.errors[0].message);
+      toast.error("unable to reset the password", {
+        style: {
+          borderColor: "red",
+        },
+      });
     }
   };
 
@@ -64,7 +76,7 @@ const PwReset = () => {
             value={emailAddress}
             className="mt-12"
             handleChangeText={(
-              e: NativeSyntheticEvent<TextInputChangeEventData>,
+              e: NativeSyntheticEvent<TextInputChangeEventData>
             ) => setEmailAddress(e.nativeEvent.text)}
             props={{ autoCapitalize: "none" }}
           />
@@ -85,7 +97,7 @@ const PwReset = () => {
               value={code}
               className="mt-12"
               handleChangeText={(
-                e: NativeSyntheticEvent<TextInputChangeEventData>,
+                e: NativeSyntheticEvent<TextInputChangeEventData>
               ) => setCode(e.nativeEvent.text)}
               props={{ autoCapitalize: "none" }}
             />
@@ -95,7 +107,7 @@ const PwReset = () => {
               className="mt-12"
               title="Password"
               handleChangeText={(
-                e: NativeSyntheticEvent<TextInputChangeEventData>,
+                e: NativeSyntheticEvent<TextInputChangeEventData>
               ) => setPassword(e.nativeEvent.text)}
             />
           </View>

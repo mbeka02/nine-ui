@@ -10,6 +10,10 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import { ClerkProvider, ClerkLoaded, useAuth } from "@clerk/clerk-expo";
 import { useBiometrics } from "@/hooks/useBiometrics";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { Toaster } from "sonner-native";
+import { View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -98,35 +102,6 @@ const InitialLayout = () => {
     };
     handleAuthRedirects();
   }, [isLoaded, isSignedIn, segments]);
-
-  //old auth redirect logic
-  /*useEffect(() => {
-    const checkNavigation = async () => {
-      if (!isLoaded) return;
-
-      const inTabsGroup = segments[0] === "(tabs)";
-      const biometricSetupDone = await isBiometricSetup();
-      const passcodeSetupDone = await SecureStore.getItemAsync("userPasscode");
-
-      console.log("Biometric Setup Done:", biometricSetupDone); // Debugging line
-      console.log("passcodeSetupDone:", passcodeSetupDone);
-      if (isSignedIn) {
-        if (!biometricSetupDone && !passcodeSetupDone) {
-          router.replace("/biometric-setup");
-        } else if (
-          (!inTabsGroup && biometricSetupDone) ||
-          (!inTabsGroup && passcodeSetupDone)
-        ) {
-          router.replace("/lock-screen");
-        }
-      } else if (segments[0] !== "home") {
-        router.replace("/home");
-      }
-    };
-
-    checkNavigation();
-  }, [isLoaded, isSignedIn]);
-*/
   return (
     <Stack>
       <Stack.Screen name="(public)" options={{ headerShown: false }} />
@@ -183,9 +158,25 @@ export default function RootLayout() {
   return (
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
       <ClerkLoaded>
-        <ThemeProvider value={DarkTheme}>
-          <InitialLayout />
-        </ThemeProvider>
+        <SafeAreaProvider>
+          <GestureHandlerRootView>
+            <ThemeProvider value={DarkTheme}>
+              <InitialLayout />
+
+              <Toaster
+                theme="dark"
+                position="top-center"
+                toastOptions={{
+                  style: {
+                    borderColor: "#9EDA6F",
+                    borderWidth: 1,
+                    backgroundColor: "#202020",
+                  },
+                }}
+              />
+            </ThemeProvider>
+          </GestureHandlerRootView>
+        </SafeAreaProvider>
       </ClerkLoaded>
     </ClerkProvider>
   );
