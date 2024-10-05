@@ -2,7 +2,7 @@ import { FormInput } from "@/components/form/FormInput";
 import { useSignIn } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
 import React, { useState } from "react";
-import { View, StyleSheet, Button, Pressable, Text, Alert } from "react-native";
+import { View, StyleSheet, Pressable, Text } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
 import { TextInputChangeEventData, NativeSyntheticEvent } from "react-native";
 import { FormButton } from "@/components/form/FormButton";
@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import * as LocalAuthentication from "expo-local-authentication";
 import userWallet from "@/lib/userWallet";
-
+import { toast } from "sonner-native";
 const Login = () => {
   const { signIn, setActive, isLoaded } = useSignIn();
   const router = useRouter();
@@ -38,7 +38,11 @@ const Login = () => {
       return;
     }
     if (!form.emailAddress || !form.password) {
-      Alert.alert("Error", "Enter your email address and password");
+      toast.error("enter your email and password", {
+        style: {
+          borderColor: "red",
+        },
+      });
       return;
     }
     setLoading(true);
@@ -56,7 +60,11 @@ const Login = () => {
       // Check if biometric setup is done
       await checkBiometricSetup();
     } catch (err: any) {
-      alert(err.errors[0].message || "Sign in failed");
+      toast.error("sign in failed", {
+        style: {
+          borderColor: "red",
+        },
+      });
     } finally {
       setLoading(false);
     }

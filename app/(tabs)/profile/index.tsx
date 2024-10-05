@@ -14,12 +14,12 @@ import { FormButton } from "@/components/form/FormButton";
 import { useCallback, useEffect, useState } from "react";
 import { FormInput } from "@/components/form/FormInput";
 import { NativeSyntheticEvent, TextInputChangeEventData } from "react-native";
-import { Alert } from "react-native";
 import * as expoImagePicker from "expo-image-picker";
 import "../../../global";
 import userWallet from "@/lib/userWallet";
 import { useBottomTabBarHeight } from "@/utilities";
 import { Modal } from "@/components/Modal";
+import { toast } from "sonner-native";
 export default function ProfileScreen() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [form, setForm] = useState({
@@ -68,24 +68,28 @@ export default function ProfileScreen() {
         username: form.username,
       });
       await user.reload();
-      Alert.alert("Success", "Profile updated successfully");
+      toast.success("profile updated");
+      //Alert.alert("Success", "Profile updated successfully");
     } catch (error: any) {
       console.log(error.errors[0]);
-      Alert.alert("Error", "Failed to update profile");
+      toast.error("unable to update your profile", {
+        style: {
+          borderColor: "red",
+        },
+      });
     } finally {
       setIsUpdating(false);
     }
   };
   const onPickImage = async () => {
     try {
-      const { status } =
+      /* const { status } =
         await expoImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert(
-          "Permission Required",
-          "Please grant access to your media gallery"
+        toast.warning(
+          "Permission Required , please grant access to your media gallery"
         );
-      }
+      }*/
       let result = await expoImagePicker.launchImageLibraryAsync({
         mediaTypes: expoImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
@@ -99,10 +103,16 @@ export default function ProfileScreen() {
         const image = `data:${mimeType};base64,${base64}`;
         await user.setProfileImage({ file: image });
         await user.reload();
+        toast.success("profile picture saved");
       }
     } catch (error: any) {
-      console.log(error.errors[0]);
-      Alert.alert("Error", "Failed to update profile picture");
+      //console.log(error.errors[0]);
+      console.log(error);
+      toast.error("unable to update your profile picture", {
+        style: {
+          borderColor: "red",
+        },
+      });
     }
   };
   return (
