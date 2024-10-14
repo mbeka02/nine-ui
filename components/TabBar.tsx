@@ -85,7 +85,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               {
                 position: "absolute",
                 backgroundColor: "rgba(158, 218, 111, 0.9)",
-                borderRadius: 40,
+                borderRadius: 60,
 
                 height: dimensions.height,
                 width: buttonWidth,
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#202020", //"#151718",
     marginHorizontal: 10,
     paddingVertical: 15,
-    borderRadius: 40,
+    borderRadius: 60,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
