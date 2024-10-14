@@ -9,7 +9,6 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useState } from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { toast } from "sonner-native";
-
 export default function Pay() {
   const { amount, requestID, requestedDate, payeeAddress, reason } =
     useLocalSearchParams();
@@ -23,6 +22,7 @@ export default function Pay() {
     try {
       setLoading(true);
       await makePayment(amount, receiver, requestID);
+
       toast.success("the payment was successful");
     } catch (error) {
       console.log("unable to complete payment:", error);

@@ -14,6 +14,8 @@ import { Toaster } from "sonner-native";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useReactQueryDevTools } from "@dev-plugins/react-query";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -95,7 +97,7 @@ const InitialLayout = () => {
           }
         }
       } catch (error) {
-        console.error("redirect failed");
+        console.error("redirect failed:", error);
       } finally {
         setInitialAuthCheckComplete(true);
       }
@@ -138,9 +140,12 @@ const tokenCache = {
     }
   },
 };
-
+const queryClient = new QueryClient();
 export default function RootLayout() {
+  useReactQueryDevTools(queryClient);
+
   const colorScheme = useColorScheme();
+
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -156,28 +161,30 @@ export default function RootLayout() {
   }
 
   return (
-    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-      <ClerkLoaded>
-        <SafeAreaProvider>
-          <GestureHandlerRootView>
-            <ThemeProvider value={DarkTheme}>
-              <InitialLayout />
+    <QueryClientProvider client={queryClient}>
+      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+        <ClerkLoaded>
+          <SafeAreaProvider>
+            <GestureHandlerRootView>
+              <ThemeProvider value={DarkTheme}>
+                <InitialLayout />
 
-              <Toaster
-                theme="dark"
-                position="top-center"
-                toastOptions={{
-                  style: {
-                    borderColor: "#9EDA6F",
-                    borderWidth: 1,
-                    backgroundColor: "#202020",
-                  },
-                }}
-              />
-            </ThemeProvider>
-          </GestureHandlerRootView>
-        </SafeAreaProvider>
-      </ClerkLoaded>
-    </ClerkProvider>
+                <Toaster
+                  theme="dark"
+                  position="top-center"
+                  toastOptions={{
+                    style: {
+                      borderColor: "#9EDA6F",
+                      borderWidth: 1,
+                      backgroundColor: "#202020",
+                    },
+                  }}
+                />
+              </ThemeProvider>
+            </GestureHandlerRootView>
+          </SafeAreaProvider>
+        </ClerkLoaded>
+      </ClerkProvider>
+    </QueryClientProvider>
   );
 }

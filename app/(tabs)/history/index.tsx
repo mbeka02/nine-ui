@@ -9,19 +9,30 @@ import {
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useAllRequests } from "@/hooks/useAllRequests";
+// import { useAllRequests } from "@/hooks/useAllRequests";
 import { RequestCard } from "@/components/Screens/RequestCard";
 import { useBottomTabBarHeight } from "@/utilities";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAllRequests } from "@/services/requests";
 export default function HistoryScreen() {
-  const { allRequests, refetchData, loading, error } = useAllRequests();
+  //const { allRequests, refetchData, loading, error } = useAllRequests();
+  const client = useQueryClient();
+  const {
+    data: allRequests,
+    isLoading,
+    error,
+    isError,
+  } = useQuery({ queryKey: ["allRequests"], queryFn: getAllRequests });
   const bottomTabBarHeight = useBottomTabBarHeight();
-  if (error) {
+  if (isError) {
     return (
-      <Text className="text-red-200 m-auto text-lg font-semibold">{error}</Text>
+      <Text className="text-red-200 m-auto text-lg font-semibold">
+        {error.message}
+      </Text>
     );
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <ActivityIndicator color="#9EDA6F" size="large" className="m-auto" />
     );
@@ -33,8 +44,10 @@ export default function HistoryScreen() {
         className="mx-6 my-12"
         refreshControl={
           <RefreshControl
-            onRefresh={refetchData}
-            refreshing={loading}
+            onRefresh={() =>
+              client.invalidateQueries({ queryKey: ["allRequests"] })
+            }
+            refreshing={isLoading}
             colors={["#9EDA6F"]}
             progressBackgroundColor="#202020"
           />
@@ -45,10 +58,7 @@ export default function HistoryScreen() {
             Payment Request History
           </ThemedText>
         </ThemedView>
-        <Text className="hidden last:flex w-full m-auto text-white font-semibold  text-lg  ">
-          No pending requests at the moment
-        </Text>
-        {allRequests.map((request) => (
+        {allRequests?.map((request) => (
           <RequestCard
             key={request.requestID}
             amount={request.amount}

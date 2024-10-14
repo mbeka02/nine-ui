@@ -7,12 +7,23 @@ import { FALSE, HAS_SYNCED_USER_DETAILS, TRUE } from "@/lib/constants";
 import * as SecureStore from "expo-secure-store";
 import { useCallback, useEffect } from "react";
 import { PendingCard } from "@/components/Screens/PendingCard";
-import { usePendingRequests } from "@/hooks/usePendingRequests";
+// import { usePendingRequests } from "@/hooks/usePendingRequests";
 import { ScrollView, RefreshControl, ActivityIndicator } from "react-native";
 import { useBottomTabBarHeight } from "@/utilities";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { getPendingRequests } from "@/services/requests";
 export default function HomeScreen() {
-  const { pendingRequests, refetchData, loading, error } = usePendingRequests();
-
+  const client = useQueryClient();
+  // const { pendingRequests, refetchData, loading, error } = usePendingRequests();
+  const {
+    data: pendingRequests,
+    isError,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["pendingRequests"],
+    queryFn: getPendingRequests,
+  });
   const tabBarHeight = useBottomTabBarHeight();
   const handleWalletInitialization = useCallback(async () => {
     await userWallet.init();
@@ -64,15 +75,15 @@ export default function HomeScreen() {
   }, [handleWalletInitialization]);
 
   const Content = () => {
-    if (error) {
+    if (isError) {
       return (
         <Text className="text-red-200 m-auto text-lg font-semibold">
-          {error}
+          {error.message}
         </Text>
       );
     }
 
-    if (loading) {
+    if (isLoading) {
       return (
         <ActivityIndicator color="#9EDA6F" size="large" className="m-auto" />
       );
@@ -82,8 +93,10 @@ export default function HomeScreen() {
         className="mx-6  h-60 my-12"
         refreshControl={
           <RefreshControl
-            onRefresh={refetchData}
-            refreshing={loading}
+            onRefresh={() =>
+              client.invalidateQueries({ queryKey: ["pendingRequests"] })
+            }
+            refreshing={isLoading}
             colors={["#9EDA6F"]}
             progressBackgroundColor="#202020"
           />
@@ -96,10 +109,7 @@ export default function HomeScreen() {
           </Text>
         </View>
       */}
-        <Text className="hidden last:flex w-full m-auto text-white font-semibold  text-lg  ">
-          No pending requests at the moment
-        </Text>
-        {pendingRequests.map((request) => (
+        {pendingRequests?.map((request) => (
           <PendingCard
             key={request.requestID}
             amount={request.amount}

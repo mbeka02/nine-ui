@@ -16,7 +16,6 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { Modal } from "./Modal";
-import * as SecureStore from "expo-secure-store";
 import { useEffect } from "react";
 export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { signOut } = useAuth();
@@ -25,9 +24,6 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const [keyboardStatus, setKeyboardStatus] = useState<boolean>();
 
   const doLogout = async () => {
-    // DON'T DELETE THE DETAILS
-    //await SecureStore.deleteItemAsync("biometricSetupDone"); //add log to see if it is deleted
-    //await SecureStore.deleteItemAsync("userPasscode"); //add log to see if it is deleted
     signOut();
   };
 
@@ -89,7 +85,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               {
                 position: "absolute",
                 backgroundColor: "rgba(158, 218, 111, 0.9)",
-                borderRadius: 30,
+                borderRadius: 40,
 
                 height: dimensions.height,
                 width: buttonWidth,
@@ -189,7 +185,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#202020", //"#151718",
     marginHorizontal: 10,
     paddingVertical: 15,
-    borderRadius: 30,
+    borderRadius: 40,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 12 },
     shadowRadius: 10,
