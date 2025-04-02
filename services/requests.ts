@@ -5,7 +5,7 @@ export interface GetRequestData {
   reason: string;
   requestedDate: string;
 }
-
+console.log(process.env.EXPO_PUBLIC_BACKEND_URL);
 export const getPendingRequests = async (): Promise<GetRequestData[]> => {
   try {
     const response = await fetch(
@@ -14,6 +14,8 @@ export const getPendingRequests = async (): Promise<GetRequestData[]> => {
     const data = await response.json();
     return data;
   } catch (error) {
+    console.log("Error occured while getting all pending requests", error);
+
     throw new Error("something went wrong");
   }
 };
@@ -26,6 +28,7 @@ export const getAllRequests = async (): Promise<GetRequestData[]> => {
     const data = await response.json();
     return data;
   } catch (error) {
+    console.log("Error occured while getting all requests", error);
     throw new Error("something went wrong ");
   }
 };
