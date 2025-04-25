@@ -7,8 +7,7 @@ const _layout = () => {
             headerShown: false,
         }} >
             <Stack.Screen
-                name="Pay"
-                
+                name="[pay]"      
             />
         </Stack>
     )

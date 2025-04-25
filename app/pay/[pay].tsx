@@ -10,7 +10,7 @@ import { useState } from "react";
 import Spinner from "react-native-loading-spinner-overlay";
 import { toast } from "sonner-native";
 import { Ionicons } from '@expo/vector-icons';
-
+import userWallet from "@/lib/userWallet";
 
 export default function Pay() {
   const { amount , requestID, requestedDate, payeeAddress, reason } =
@@ -25,7 +25,13 @@ export default function Pay() {
   ) => {
     try {
       setLoading(true);
-      await makePayment(amount, receiver, requestID);
+    const results = await makePayment(amount, receiver, requestID);
+    toast.success("Payment successful!", {
+      description: `Transaction Hash: ${results.transactionHash}\nAmount: ${results.amount}\nGas Fees: ${results.gasFees}\nReceiver: ${results.receiver}`,
+      style: {
+        borderColor: "green",
+      },
+    });
       toast.success("Payment successful!");
     } catch (error) {
       console.log("unable to complete payment:", error);
@@ -43,17 +49,7 @@ export default function Pay() {
   return (
     <ParallaxScrollView>
       <Spinner visible={loading} />
-      
-      {/* Header */}
-      <ThemedView style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#9EDA6F" />
-        </Pressable>
-        <ThemedText type="title" style={styles.headerTitle}>Payment Request</ThemedText>
-        <View style={{ width: 24 }}>
-          <Text style={{ display: 'none' }}>Spacer for balance</Text>
-        </View>
-      </ThemedView>
+     
       
       {/* Payment Card */}
       <ThemedView style={styles.card}>
@@ -74,7 +70,7 @@ export default function Pay() {
             <View>
               <ThemedText style={styles.accountName}>Account 1</ThemedText>
               <ThemedText style={styles.accountAddress}>
-                {Utils.truncateAddress("0x123...4567")}
+                {Utils.truncateAddress(userWallet.signer!.accountAddress.toString())}
               </ThemedText>
             </View>
           </View>
@@ -131,7 +127,7 @@ export default function Pay() {
             )
           }
         >
-          <Text style={styles.buttonText}>Confirm Payment</Text>
+          <Text style={styles.buttonText}>Confirm</Text>
         </Pressable>
       </View>
     </ParallaxScrollView>
@@ -139,25 +135,9 @@ export default function Pay() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    marginBottom: 16,
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-  },
+  
   card: {
     borderRadius: 16,
-    padding: 20,
-    marginHorizontal: 16,
-    marginBottom: 24,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -166,16 +146,16 @@ const styles = StyleSheet.create({
   },
   cardHeader: {
     alignItems: 'center',
-    marginBottom: 20,
   },
   cardTitle: {
     fontSize: 16,
     color: '#666',
-    marginBottom: 8,
+    marginBottom: 2,
   },
   amount: {
     fontSize: 32,
     fontWeight: '700',
+    paddingTop: 20
   },
   divider: {
     height: 1,
@@ -241,7 +221,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 10,
     paddingHorizontal: 24,
     flex: 1,
     justifyContent: 'center',

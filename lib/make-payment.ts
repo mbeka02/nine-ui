@@ -33,7 +33,13 @@ export default async function makePayment(amount: number, receiver: string, requ
 
         console.log("Transaction Hash => ", commitedTransaction.hash);
         const executedTransaction = await aptos.waitForTransaction({ transactionHash: commitedTransaction.hash });
-        console.log("Done")
+        console.log("Done");
+        return {
+            transactionHash: commitedTransaction.hash,
+            amount: amount,
+            gasFees: userTransactionResponse.gas_used,
+            receiver: receiver,
+        }
     } catch (err) {
         console.log("Error Making Payment =>", err);
         throw "Error Making Payment";
